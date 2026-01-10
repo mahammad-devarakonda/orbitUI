@@ -6,6 +6,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     variant?: 'default' | 'glass' | 'dark';
+    rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
@@ -14,6 +15,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
     leftIcon,
     rightIcon,
     variant = 'default',
+    rounded = 'lg',
     className = '',
     ...props
 }, ref) => {
@@ -21,6 +23,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
         default: 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500',
         glass: 'bg-black/30 border-gray-600 text-white placeholder-gray-400 focus:ring-pink-500 focus:border-pink-500',
         dark: 'bg-gray-900 border-gray-800 text-white focus:ring-blue-500',
+    };
+
+    const roundedClasses = {
+        none: 'rounded-none',
+        sm: 'rounded-sm',
+        md: 'rounded-md',
+        lg: 'rounded-lg',
+        full: 'rounded-full',
     };
 
     return (
@@ -45,7 +55,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
                         py-3 
                         border 
                         ${error ? 'border-red-500' : ''} 
-                        rounded-lg 
+                        ${roundedClasses[rounded]}
                         shadow-sm 
                         focus:outline-none 
                         focus:ring-2 
