@@ -5,20 +5,28 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
     error?: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    variant?: 'default' | 'glass' | 'dark';
 }
 
-export const Input: React.FC<InputProps> = ({
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
     label,
     error,
     leftIcon,
     rightIcon,
+    variant = 'default',
     className = '',
     ...props
-}) => {
+}, ref) => {
+    const variantClasses = {
+        default: 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500',
+        glass: 'bg-black/30 border-gray-600 text-white placeholder-gray-400 focus:ring-pink-500 focus:border-pink-500',
+        dark: 'bg-gray-900 border-gray-800 text-white focus:ring-blue-500',
+    };
+
     return (
         <div className="flex flex-col gap-1.5 w-full">
             {label && (
-                <label className="text-sm font-medium text-gray-700">
+                <label className={`text-sm font-medium ${variant === 'default' ? 'text-gray-700' : 'text-gray-300'}`}>
                     {label}
                 </label>
             )}
@@ -29,23 +37,23 @@ export const Input: React.FC<InputProps> = ({
                     </div>
                 )}
                 <input
+                    ref={ref}
                     className={`
                         w-full 
                         ${leftIcon ? 'pl-10' : 'px-3'} 
                         ${rightIcon ? 'pr-10' : 'px-3'} 
-                        py-2 
-                        bg-white 
+                        py-3 
                         border 
-                        ${error ? 'border-red-500' : 'border-gray-300'} 
-                        rounded-md 
+                        ${error ? 'border-red-500' : ''} 
+                        rounded-lg 
                         shadow-sm 
                         focus:outline-none 
                         focus:ring-2 
-                        ${error ? 'focus:ring-red-500' : 'focus:ring-blue-500'} 
+                        ${error ? 'focus:ring-red-500' : ''} 
                         focus:border-transparent 
                         transition-all 
                         duration-200 
-                        hover:border-gray-400 
+                        ${variantClasses[variant]}
                         ${className}
                     `}
                     {...props}
@@ -61,4 +69,6 @@ export const Input: React.FC<InputProps> = ({
             )}
         </div>
     );
-};
+});
+
+Input.displayName = 'Input';

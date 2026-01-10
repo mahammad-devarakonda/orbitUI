@@ -15,6 +15,8 @@ export interface TypographyProps {
     className?: string;
     /** Truncate text with ellipsis if it overflows */
     noWrap?: boolean;
+    /** Use a gradient for the text */
+    gradient?: boolean | string;
 }
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -26,6 +28,7 @@ export const Typography: React.FC<TypographyProps> = ({
     color,
     className = '',
     noWrap = false,
+    gradient,
 }) => {
     // Default element mapping logic
     const defaultComponents: Record<string, React.ElementType> = {
@@ -82,7 +85,16 @@ export const Typography: React.FC<TypographyProps> = ({
     const variantClass = variantStyles[variant];
     const weightClass = weight ? weightMap[weight] : defaultWeights[variant];
     const alignClass = alignMap[align];
-    const colorClass = color || 'text-gray-900'; // Default black/dark gray
+
+    let colorClass = color || (variant === 'caption' ? 'text-gray-500' : 'text-gray-900');
+
+    if (gradient) {
+        const gradientClass = typeof gradient === 'string'
+            ? gradient
+            : 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500';
+        colorClass = `${gradientClass} text-transparent bg-clip-text`;
+    }
+
     const wrapClass = noWrap ? 'truncate' : '';
 
     const finalClasses = [

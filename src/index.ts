@@ -11,6 +11,7 @@ export * from './components/TextArea/TextArea';
 export * from './components/AppLayout/AppLayout';
 export * from './components/SocialLayout/SocialLayout';
 export * from './components/InboxLayout/InboxLayout';
+export * from './components/Avatar/Avatar';
 
 
 
