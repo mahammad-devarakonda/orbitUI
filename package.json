@@ -15,7 +15,7 @@
       "import": "./dist/orbitui.es.js",
       "require": "./dist/orbitui.cjs.js"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/orbitui-kit.css"
   },
   "scripts": {
     "dev": "vite",
