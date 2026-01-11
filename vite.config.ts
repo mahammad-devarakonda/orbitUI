@@ -9,11 +9,14 @@ import { playwright } from '@vitest/browser-playwright';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    cssInjectedByJsPlugin(),
     dts({
       insertTypesEntry: true,
       tsconfigPath: './tsconfig.app.json'
