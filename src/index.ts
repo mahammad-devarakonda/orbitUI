@@ -14,6 +14,7 @@ export * from './components/SocialLayout/SocialLayout';
 export * from './components/InboxLayout/InboxLayout';
 export * from './components/Avatar/Avatar';
 export * from './components/Chat';
+export * from './components/Stack';
 
 
 
