@@ -41,8 +41,7 @@ export const FullFeatured: Story = {
             </div>
         ),
         footer: (
-            <div className="flex justify-end gap-2">
-                <Button variant="secondary" size="sm">Cancel</Button>
+            <div className="flex  gap-2">
                 <Button variant="primary" size="sm">Buy Now</Button>
             </div>
         ),

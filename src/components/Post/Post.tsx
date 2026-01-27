@@ -2,11 +2,11 @@ import React from 'react';
 import { Button } from '../Button/Button';
 
 export interface PostProps {
-    username: string;
-    profilePic: string;
+    username?: string;
+    profilePic?: string;
     postImage: string;
-    likesCount: number;
-    caption: string;
+    likesCount?: number;
+    caption?: string;
     location?: string;
     isLiked?: boolean;
     isBookmarked?: boolean;
@@ -14,13 +14,22 @@ export interface PostProps {
     onComment?: () => void;
     onShare?: () => void;
     onBookmark?: () => void;
+
+    // New props for Media Variant
+    variant?: 'social' | 'media';
+    title?: string;
+    tags?: string[];
+    rating?: number;
+    voteCount?: string;
+    actionLabel?: string;
+    onAction?: () => void;
 }
 
 export const Post: React.FC<PostProps> = ({
     username,
     profilePic,
     postImage,
-    likesCount,
+    likesCount = 0,
     caption,
     location,
     isLiked = false,
@@ -29,7 +38,61 @@ export const Post: React.FC<PostProps> = ({
     onComment,
     onShare,
     onBookmark,
+    variant = 'social',
+    title,
+    tags,
+    rating,
+    voteCount,
+    actionLabel,
+    onAction,
 }) => {
+
+    if (variant === 'media') {
+        return (
+            <div className="group relative max-w-[300px] mx-auto bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 font-sans transition-all duration-300 hover:shadow-xl">
+                <div className="relative aspect-[2/3] w-full">
+                    <img
+                        src={postImage}
+                        alt={title || "Media content"}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12">
+                        {title && <h3 className="text-white font-bold text-xl leading-tight">{title}</h3>}
+                        {tags && <p className="text-gray-300 text-xs mt-1">{tags.join(' • ')}</p>}
+                    </div>
+                </div>
+
+                <div className="p-4 space-y-4">
+                    {(rating || voteCount) && (
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1 text-yellow-500">
+                                {rating && <span className="text-lg font-bold">{rating}</span>}
+                                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                                {voteCount && <span className="text-gray-400 text-xs ml-1">({voteCount})</span>}
+                            </div>
+                        </div>
+                    )}
+
+                    {caption && (
+                        <p className="text-gray-600 text-sm line-clamp-3">
+                            {caption}
+                        </p>
+                    )}
+
+                    {actionLabel && (
+                        <Button
+                            fullWidth
+                            className="!bg-[#f84464] hover:!bg-[#d63a56] text-white font-medium py-2 rounded-md transition-colors"
+                            onClick={onAction}
+                        >
+                            {actionLabel}
+                        </Button>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="group relative max-w-[420px] mx-auto bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100/50">
             {/* Main Image with Floating Options */}
@@ -65,8 +128,8 @@ export const Post: React.FC<PostProps> = ({
                     <div className="flex items-center gap-3">
                         <div className="relative">
                             <img
-                                src={profilePic}
-                                alt={username}
+                                src={profilePic || ''}
+                                alt={username || ''}
                                 className="w-10 h-10 rounded-full object-cover ring-2 ring-offset-2 ring-indigo-500"
                             />
                         </div>

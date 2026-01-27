@@ -8,6 +8,11 @@ const meta: Meta<typeof Input> = {
         layout: 'centered',
     },
     tags: ['autodocs'],
+    argTypes: {
+        shadow: { control: 'boolean' },
+        focusRing: { control: 'boolean' },
+        focusRingColor: { control: 'color' },
+    },
 };
 
 export default meta;

@@ -59,3 +59,4 @@ export const NoLocation: Story = {
         location: undefined,
     },
 };
+

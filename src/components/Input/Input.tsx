@@ -8,6 +8,8 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
     variant?: 'default' | 'glass' | 'dark';
     rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
     shadow?: boolean;
+    focusRing?: boolean;
+    focusRingColor?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
@@ -59,7 +61,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
                         ${roundedClasses[rounded]}
                         ${props.shadow ? 'shadow-sm' : ''}
                         focus:outline-none 
-                        focus:ring-2 
+                        ${props.focusRing ? 'focus:ring-2' : ''}
                         ${error ? 'focus:ring-red-500' : ''} 
                         focus:border-transparent 
                         transition-all 
@@ -67,6 +69,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
                         ${variantClasses[variant]}
                         ${className}
                     `}
+                    style={props.focusRingColor ? { '--tw-ring-color': props.focusRingColor } as React.CSSProperties : undefined}
                     {...props}
                 />
                 {rightIcon && (
