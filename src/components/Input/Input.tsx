@@ -7,6 +7,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
     rightIcon?: React.ReactNode;
     variant?: 'default' | 'glass' | 'dark';
     rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+    shadow?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
@@ -56,7 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
                         border 
                         ${error ? 'border-red-500' : ''} 
                         ${roundedClasses[rounded]}
-                        shadow-sm 
+                        ${props.shadow ? 'shadow-sm' : ''}
                         focus:outline-none 
                         focus:ring-2 
                         ${error ? 'focus:ring-red-500' : ''} 

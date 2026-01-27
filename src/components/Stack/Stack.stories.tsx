@@ -53,8 +53,7 @@ export const Default: Story = {
 
 export const DirectionRow: Story = {
     args: {
-        direction: 'row',
-        spacing: 4,
+        direction: 'column',
         children: (
             <>
                 <Item>Item 1</Item>
@@ -68,7 +67,7 @@ export const DirectionRow: Story = {
 export const WithDivider: Story = {
     args: {
         direction: 'column',
-        spacing: 4,
+        spacing: 9,
         divider: <div className="border-t border-gray-300 w-full" />,
         children: (
             <>

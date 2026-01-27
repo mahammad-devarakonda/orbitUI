@@ -100,11 +100,18 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
     if (typeof spacing === 'number') {
         customStyle.gap = `${spacing * 0.25}rem`;
     } else if (typeof spacing === 'string') {
-        // Simple heuristic: if it contains styling units or calc, treat as style, else class
-        if (spacing.match(/^(?:\d+(?:px|rem|em|%)|calc|var)/)) {
-            customStyle.gap = spacing;
+        const s = spacing.trim();
+        const isPureNumber = /^-?\d+(\.\d+)?$/.test(s);
+
+        if (isPureNumber) {
+            // It's a purely numeric string like "4" or "2.5" - treat as multiplier
+            customStyle.gap = `${parseFloat(s) * 0.25}rem`;
+        } else if (/^[\d.]+(px|rem|em|%|vw|vh|vmin|vmax)$/.test(s) || s.startsWith('calc') || s.startsWith('var')) {
+            // It has explicit units or is a function - treat as style
+            customStyle.gap = s;
         } else {
-            gapClass = spacing; // Assume it's a full class like 'gap-x-4'
+            // Assume it's a class like "gap-4" or "gap-x-2"
+            gapClass = s;
         }
     }
 
