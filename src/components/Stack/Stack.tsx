@@ -21,8 +21,12 @@ export type StackProps<T extends React.ElementType = 'div'> = {
      */
     spacing?: number | string;
     /**
-     * If true, the flexbox will wrap.
-     * @default false
+     * The flex-wrap property.
+     * @default 'nowrap'
+     */
+    flexWrap?: 'wrap' | 'nowrap' | 'wrap-reverse';
+    /**
+     * @deprecated Use flexWrap instead.
      */
     wrap?: boolean;
     /**
@@ -47,7 +51,8 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
         children,
         direction = 'column',
         spacing = 0,
-        wrap = false,
+        wrap,
+        flexWrap,
         divider,
         alignItems,
         justifyContent,
@@ -83,11 +88,17 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
         'evenly': 'justify-evenly',
     };
 
+    const wrapMap = {
+        'wrap': 'flex-wrap',
+        'nowrap': 'flex-nowrap',
+        'wrap-reverse': 'flex-wrap-reverse',
+    };
+
     let gapClass = '';
     let customStyle = { ...style };
 
     if (typeof spacing === 'number') {
-        gapClass = `gap-${spacing}`;
+        customStyle.gap = `${spacing * 0.25}rem`;
     } else if (typeof spacing === 'string') {
         // Simple heuristic: if it contains styling units or calc, treat as style, else class
         if (spacing.match(/^(?:\d+(?:px|rem|em|%)|calc|var)/)) {
@@ -97,10 +108,12 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
         }
     }
 
+    const effectiveWrap = flexWrap || (wrap ? 'wrap' : 'nowrap');
+
     const classes = [
         'flex',
         directionMap[direction],
-        wrap ? 'flex-wrap' : 'flex-nowrap',
+        wrapMap[effectiveWrap],
         alignItems ? alignMap[alignItems] : '',
         justifyContent ? justifyMap[justifyContent] : '',
         gapClass,

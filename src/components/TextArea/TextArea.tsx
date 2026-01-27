@@ -14,12 +14,12 @@ export const TextArea: React.FC<TextAreaProps> = ({
     rows = 4,
     ...props
 }) => {
-    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+        const target = e.target as HTMLTextAreaElement;
         if (autoResize) {
-            e.target.style.height = 'auto';
-            e.target.style.height = `${e.target.scrollHeight}px`;
+            target.style.height = 'auto';
+            target.style.height = `${target.scrollHeight}px`;
         }
-        props.onChange?.(e);
     };
 
     return (
