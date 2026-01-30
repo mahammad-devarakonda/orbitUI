@@ -85,7 +85,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 <div
                     onClick={() => setIsOpen(!isOpen)}
                     className={`
-                        min-h-[46px] w-full px-3 py-2 border flex flex-wrap gap-2 cursor-pointer
+                        min-h-11.5 w-full px-3 py-2 border flex flex-wrap gap-2 cursor-pointer
                         ${roundedClasses[rounded]}
                         ${variantClasses[variant]}
                         ${isOpen ? 'ring-2 ring-purple-500 border-transparent' : ''}
