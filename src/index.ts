@@ -16,6 +16,7 @@ export * from './components/Avatar/Avatar';
 export * from './components/Chat';
 export * from './components/Stack';
 export * from './components/Dialog/BaseDialog';
+export * from './components/DataTable/DataTable';
 
 
 

@@ -66,7 +66,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                         </button>
                     )}
                     <div className="flex-1 flex items-center justify-between">
-                        {header || <div className="font-bold text-xl text-indigo-600">OrbitUI</div>}
+                        {header}
                     </div>
                 </header>
 

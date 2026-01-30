@@ -31,7 +31,8 @@
     "tailwindcss": "^4.0.0"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.18"
+    "@tailwindcss/vite": "^4.1.18",
+    "lucide-react": "^0.563.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",
