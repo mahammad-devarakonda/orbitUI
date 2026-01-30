@@ -1,6 +1,8 @@
 import './index.css';
 export * from './components/Button/Button';
 export * from './components/Input/Input';
+export * from './components/Select/OrbitSelect';
+export * from './components/MultiSelect/MultiSelect';
 export * from './components/Card/Card';
 export * from './components/Post/Post';
 export * from './components/Loader/Loader';
