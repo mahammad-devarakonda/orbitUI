@@ -68,8 +68,41 @@ export const WithFooter: Story = {
     },
 };
 
-export const minimalist: Story = {
+export const CollapsibleSidebar: Story = {
     args: {
-        children: <div className="max-w-2xl mx-auto py-12"><h1 className="text-4xl font-bold mb-8 text-center">OrbitUI</h1><MainContent /></div>,
+        sidebar: <SidebarContent />,
+        header: <HeaderContent />,
+        children: <MainContent />,
+        isCollapsible: true,
+    },
+};
+
+export const HeaderFirst: Story = {
+    args: {
+        sidebar: <SidebarContent />,
+        header: <HeaderContent />,
+        children: <MainContent />,
+        layoutVariant: 'header-first',
+    },
+};
+
+export const HeaderFirstCollapsible: Story = {
+    args: {
+        sidebar: <SidebarContent />,
+        header: <HeaderContent />,
+        children: <MainContent />,
+        layoutVariant: 'header-first',
+        isCollapsible: true,
+    },
+};
+
+export const CustomWidths: Story = {
+    args: {
+        sidebar: <SidebarContent />,
+        header: <HeaderContent />,
+        children: <MainContent />,
+        sidebarWidth: '320px',
+        collapsedWidth: '80px',
+        isCollapsible: true,
     },
 };

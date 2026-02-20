@@ -52,3 +52,22 @@ export const Rounded: Story = {
         </div>
     ),
 };
+
+export const Dismissible: Story = {
+    render: () => (
+        <div className="flex gap-2">
+            <Badge variant="primary" onRemove={() => console.log('Removed Primary')}>
+                Primary
+            </Badge>
+            <Badge variant="secondary" onRemove={() => console.log('Removed Secondary')}>
+                Secondary
+            </Badge>
+            <Badge variant="outline" onRemove={() => console.log('Removed Outline')}>
+                Outline
+            </Badge>
+            <Badge variant="destructive" onRemove={() => console.log('Removed Destructive')}>
+                Destructive
+            </Badge>
+        </div>
+    ),
+};

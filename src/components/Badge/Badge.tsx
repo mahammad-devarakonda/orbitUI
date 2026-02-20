@@ -6,6 +6,7 @@ export interface BadgeProps {
     rounded?: 'sm' | 'md' | 'full';
     children: React.ReactNode;
     className?: string;
+    onRemove?: () => void;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -14,6 +15,7 @@ export const Badge: React.FC<BadgeProps> = ({
     rounded = 'full',
     children,
     className = '',
+    onRemove,
 }) => {
     const baseStyles = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none';
 
@@ -49,6 +51,31 @@ export const Badge: React.FC<BadgeProps> = ({
             `}
         >
             {children}
+            {onRemove && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove();
+                    }}
+                    className="ml-1.5 hover:bg-black/10 rounded-full p-0.5 inline-flex items-center justify-center transition-colors focus:outline-none"
+                    aria-label="Remove"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            )}
         </span>
     );
 };
