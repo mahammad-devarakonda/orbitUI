@@ -20,6 +20,8 @@ export * from './components/Stack';
 export * from './components/Dialog/BaseDialog';
 export * from './components/DataTable/DataTable';
 export * from './components/MovieTicket/MovieTicket';
+export * from './components/Badge/Badge';
+
 
 
 
