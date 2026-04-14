@@ -20,7 +20,12 @@ export * from './components/Stack';
 export * from './components/Dialog/BaseDialog';
 export * from './components/DataTable/DataTable';
 export * from './components/MovieTicket/MovieTicket';
-export * from './components/Badge/Badge';
+export { Badge } from './components/Badge/Badge';
+export type { BadgeProps } from './components/Badge/Badge';
+
+// Calendar
+export * from './components/calendar/Calendar';
+export * from './components/calendar/types';
 
 
 
