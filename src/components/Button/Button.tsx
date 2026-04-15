@@ -29,11 +29,11 @@ export const Button: React.FC<ButtonProps> = ({
 
     const variantStyles: Record<string, string> = {
         primary: 'bg-[#0070f3] text-white hover:bg-[#0060df] border border-transparent',
-        secondary: 'bg-transparent text-[#0070f3] border border-[#0070f3] hover:bg-blue-50', // White with Blue Border
-        tertiary: 'bg-transparent text-[#0070f3] border border-gray-300 hover:border-gray-400 hover:bg-gray-50', // White with Gray Border
-        danger: 'bg-[#c23b22] text-white hover:bg-[#a0301b] border border-transparent', // Burnt Orange/Red
-        link: 'bg-transparent text-[#0070f3] hover:underline px-0 py-0 h-auto border-none', // Text only
-        ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 border-transparent', // Transparent with hover bg
+        secondary: 'bg-transparent text-[#0070f3] dark:text-blue-400 border border-[#0070f3] dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20',
+        tertiary: 'bg-transparent text-[#0070f3] dark:text-blue-400 border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800',
+        danger: 'bg-[#c23b22] text-white hover:bg-[#a0301b] border border-transparent',
+        link: 'bg-transparent text-[#0070f3] hover:underline px-0 py-0 h-auto border-none',
+        ghost: 'bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-transparent',
         gradient: `text-white border-none hover:opacity-90 active:scale-95 ${gradient || 'bg-gradient-to-r from-red-500 to-pink-500'}`,
     };
 

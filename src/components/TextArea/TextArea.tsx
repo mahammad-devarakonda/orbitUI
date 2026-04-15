@@ -25,7 +25,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
     return (
         <div className="flex flex-col gap-1.5 w-full">
             {label && (
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {label}
                 </label>
             )}
@@ -35,8 +35,11 @@ export const TextArea: React.FC<TextAreaProps> = ({
                     px-3 
                     py-2 
                     bg-white 
+                    dark:bg-gray-800
                     border 
-                    ${error ? 'border-red-500' : 'border-gray-300'} 
+                    ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} 
+                    text-gray-900
+                    dark:text-white
                     rounded-md 
                     shadow-sm 
                     focus:outline-none 
@@ -46,6 +49,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
                     transition-all 
                     duration-200 
                     hover:border-gray-400 
+                    dark:hover:border-gray-600
                     min-h-[100px]
                     resize-y
                     ${className}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { format } from 'date-fns';
+import React, { useEffect, useRef } from 'react';
+import { format, isSameDay, startOfDay } from 'date-fns';
 import type { CalendarView, DayInfo, CalendarEvent } from './types';
 import { getEventColorClasses } from './utils';
 import { Typography } from '../Typography/Typography';
@@ -18,6 +18,15 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
     onEventClick,
 }) => {
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll to 8 AM on mount in week view
+    useEffect(() => {
+        if (view === 'week' && scrollContainerRef.current) {
+            // 8 AM * 80px per hour
+            scrollContainerRef.current.scrollTop = 8 * 80;
+        }
+    }, [view]);
 
     if (view === 'month') {
         return (
@@ -115,7 +124,10 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
             </div>
 
             {/* Scrollable area */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div 
+                ref={scrollContainerRef}
+                className="flex-1 overflow-y-auto custom-scrollbar"
+            >
                 <div className="grid grid-cols-[60px_1fr] relative">
                     {/* Time Gutter */}
                     <div className="flex flex-col">
@@ -147,13 +159,19 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                         {days.map((day, dayIndex) => (
                             <div key={dayIndex} className="relative h-[1920px]"> {/* 24 hours * 80px */}
                                 {day.events.map((event) => {
-                                    const startHour = event.start.getHours();
-                                    const startMin = event.start.getMinutes();
-                                    const endHour = event.end.getHours();
-                                    const endMin = event.end.getMinutes();
+                                    const startTotalMin = event.start.getHours() * 60 + event.start.getMinutes();
+                                    let endTotalMin = event.end.getHours() * 60 + event.end.getMinutes();
                                     
-                                    const top = (startHour * 80) + (startMin / 60 * 80);
-                                    const durationHours = (endHour - startHour) + ((endMin - startMin) / 60);
+                                    // Handle events that end at midnight (00:00) or cross midnight
+                                    if (endTotalMin <= startTotalMin && !isSameDay(event.start, event.end)) {
+                                        endTotalMin = 24 * 60; // Cut off at end of day for this column
+                                    } else if (endTotalMin <= startTotalMin) {
+                                        // Simple case: end at midnight of same day
+                                        endTotalMin = 24 * 60;
+                                    }
+
+                                    const top = (startTotalMin / 60) * 80;
+                                    const durationHours = (endTotalMin - startTotalMin) / 60;
                                     const height = Math.max(durationHours * 80, 24); // Minimum height
 
                                     return (

@@ -15,6 +15,8 @@ interface EventModalProps {
     onSave: (event: Omit<CalendarEvent, 'id'> & { id?: string }) => void;
     onDelete?: (id: string) => void;
     defaultSize?: 'sm' | 'md' | 'lg' | 'xl';
+    lockDate?: boolean;
+    theme?: 'light' | 'dark' | 'system';
 }
 
 const COLOR_OPTIONS = [
@@ -25,6 +27,7 @@ const COLOR_OPTIONS = [
     { name: 'Purple', value: 'purple', bg: 'bg-[#8b5cf6]', ring: 'ring-purple-200' },
 ];
 
+
 export const EventModal: React.FC<EventModalProps> = ({
     isOpen,
     onClose,
@@ -33,6 +36,8 @@ export const EventModal: React.FC<EventModalProps> = ({
     onSave,
     onDelete,
     defaultSize = 'md',
+    lockDate = false,
+    theme,
 }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -61,7 +66,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         const start = parse(`${date} ${startTime}`, 'yyyy-MM-dd HH:mm', new Date());
         const end = parse(`${date} ${endTime}`, 'yyyy-MM-dd HH:mm', new Date());
 
@@ -80,13 +85,13 @@ export const EventModal: React.FC<EventModalProps> = ({
         <BaseDialog
             isOpen={isOpen}
             onClose={onClose}
-            title="" 
-            size={defaultSize as any || 'md'}
+            title=""
+            size={defaultSize as any || 'lg'}
             showCloseButton={false}
             className="rounded-2xl shadow-xl border-0 overflow-hidden"
+            theme={theme}
         >
             <form onSubmit={handleSubmit} className="flex flex-col h-full -m-6">
-                {/* Clean Header */}
                 <div className="px-8 py-5 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className={`p-2.5 rounded-xl text-white shadow-md ${COLOR_OPTIONS.find(c => c.value === color)?.bg}`}>
@@ -113,7 +118,6 @@ export const EventModal: React.FC<EventModalProps> = ({
                 </div>
 
                 <div className="px-8 py-6 space-y-6">
-                    {/* Title Input */}
                     <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                             Event Title
@@ -128,24 +132,25 @@ export const EventModal: React.FC<EventModalProps> = ({
                         />
                     </div>
 
-                    {/* Schedule Section - Grid Aligned */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                             <Clock className="w-4 h-4 text-[#0070f3]" />
                             <span className="text-xs font-bold uppercase tracking-widest">Schedule</span>
                         </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-medium text-gray-500">Date</label>
-                                <Input
-                                    type="date"
-                                    value={date}
-                                    onChange={(e) => setDate(e.target.value)}
-                                    required
-                                    className="w-full"
-                                />
-                            </div>
+
+                        <div className={`grid grid-cols-1 ${lockDate ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4`}>
+                            {!lockDate && (
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-gray-500">Date</label>
+                                    <Input
+                                        type="date"
+                                        value={date}
+                                        onChange={(e) => setDate(e.target.value)}
+                                        required
+                                        className="w-full"
+                                    />
+                                </div>
+                            )}
                             <div className="space-y-1.5">
                                 <label className="text-xs font-medium text-gray-500">Start Time</label>
                                 <Input
@@ -169,7 +174,6 @@ export const EventModal: React.FC<EventModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Category Selection */}
                     <div className="space-y-3">
                         <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
                             <Tag className="w-4 h-4 text-[#8b5cf6]" />
@@ -181,11 +185,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                                     key={opt.value}
                                     type="button"
                                     onClick={() => setColor(opt.value)}
-                                    className={`w-8 h-8 rounded-full transition-all relative flex items-center justify-center ${opt.bg} ${
-                                        color === opt.value 
-                                            ? `ring-2 ring-offset-2 dark:ring-offset-gray-900 ${opt.ring.replace('ring-', 'ring-')}` 
-                                            : 'opacity-70 hover:opacity-100'
-                                    }`}
+                                    className={`w-8 h-8 rounded-full transition-all relative flex items-center justify-center ${opt.bg} ${color === opt.value
+                                        ? `ring-2 ring-offset-2 dark:ring-offset-gray-900 ${opt.ring.replace('ring-', 'ring-')}`
+                                        : 'opacity-70 hover:opacity-100'
+                                        }`}
                                     aria-label={`Select ${opt.name} category`}
                                 >
                                     {color === opt.value && <X className="w-3 h-3 text-white rotate-45" />}
@@ -194,7 +197,6 @@ export const EventModal: React.FC<EventModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Description */}
                     <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                             Description
@@ -209,7 +211,6 @@ export const EventModal: React.FC<EventModalProps> = ({
                     </div>
                 </div>
 
-                {/* Standard Footer */}
                 <div className="px-8 py-5 bg-gray-50 dark:bg-gray-800/30 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between mt-auto">
                     <div>
                         {event && onDelete && (
@@ -231,19 +232,19 @@ export const EventModal: React.FC<EventModalProps> = ({
                         )}
                     </div>
                     <div className="flex gap-3">
-                        <Button 
-                            type="button" 
-                            variant="tertiary" 
-                            size="md" 
+                        <Button
+                            type="button"
+                            variant="tertiary"
+                            size="md"
                             onClick={onClose}
-                            className="bg-white border-gray-300"
+                            className="dark:bg-transparent"
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            type="submit" 
-                            variant="primary" 
-                            size="md" 
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            size="md"
                             className="shadow-sm px-6"
                         >
                             {event ? 'Update' : 'Schedule'}

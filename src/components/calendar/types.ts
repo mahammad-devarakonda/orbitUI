@@ -16,6 +16,7 @@ export interface CalendarProps {
   onDeleteEvent?: (id: string) => void;
   modalSize?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  theme?: 'light' | 'dark' | 'system';
 }
 
 export interface DayInfo {

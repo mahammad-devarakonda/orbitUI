@@ -86,7 +86,7 @@ export const Typography: React.FC<TypographyProps> = ({
     const weightClass = weight ? weightMap[weight] : defaultWeights[variant];
     const alignClass = alignMap[align];
 
-    let colorClass = color || (variant === 'caption' ? 'text-gray-500' : 'text-gray-900');
+    let colorClass = color || (variant === 'caption' ? 'text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-white');
 
     if (gradient) {
         const gradientClass = typeof gradient === 'string'

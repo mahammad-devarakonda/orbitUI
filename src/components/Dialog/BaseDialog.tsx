@@ -10,6 +10,7 @@ export interface BaseDialogProps {
     size?: 'sm' | 'md' | 'lg' | 'xl';
     className?: string;
     showCloseButton?: boolean;
+    theme?: 'light' | 'dark' | 'system';
 }
 
 export const BaseDialog: React.FC<BaseDialogProps> = ({
@@ -20,6 +21,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
     size = 'md',
     className = '',
     showCloseButton = true,
+    theme,
 }) => {
     const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +61,12 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
         xl: 'max-w-2xl',
     };
 
+    // Determine if we should apply the dark class locally
+    const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     const dialogContent = (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`${isDark ? 'dark' : ''} fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300`}
             onClick={handleBackdropClick}
         >
             <div
@@ -69,8 +74,12 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
                 className={`
                     w-full 
                     bg-white 
+                    dark:bg-gray-950
                     rounded-2xl 
                     shadow-2xl 
+                    border
+                    border-transparent
+                    dark:border-gray-800
                     transform 
                     transition-all 
                     duration-300 
@@ -87,8 +96,8 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
             >
                 {/* Header */}
                 {(title || showCloseButton) && (
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white sticky top-0 z-10">
-                        {title && <h3 className="text-lg font-bold text-gray-900 leading-6">{title}</h3>}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-0 z-10">
+                        {title && <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-6">{title}</h3>}
                         {showCloseButton && (
                             <Button
                                 variant="ghost"
