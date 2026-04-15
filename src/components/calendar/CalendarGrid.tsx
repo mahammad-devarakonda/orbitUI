@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { format, isSameDay, startOfDay } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import type { CalendarView, DayInfo, CalendarEvent } from './types';
 import { getEventColorClasses } from './utils';
 import { Typography } from '../Typography/Typography';
@@ -47,7 +47,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                     {days.map((day, index) => (
                         <div
                             key={index}
-                            className={`min-h-[100px] flex flex-col bg-white dark:bg-gray-900 p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer ${
+                            className={`min-h-25 flex flex-col bg-white dark:bg-gray-900 p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer ${
                                 !day.isCurrentMonth ? 'text-gray-400 bg-gray-50/50 dark:bg-gray-900/50' : ''
                             }`}
                             onClick={() => onDateClick(day.date)}
@@ -68,7 +68,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                                 </span>
                             </div>
 
-                            <div className="flex flex-col gap-1 overflow-y-auto max-h-[80px] custom-scrollbar">
+                            <div className="flex flex-col gap-1 overflow-y-auto max-h-20 custom-scrollbar">
                                 {day.events.slice(0, 4).map((event) => (
                                     <div
                                         key={event.id}
@@ -157,7 +157,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
                         {/* Events Overlay */}
                         {days.map((day, dayIndex) => (
-                            <div key={dayIndex} className="relative h-[1920px]"> {/* 24 hours * 80px */}
+                            <div key={dayIndex} className="relative h-480"> {/* 24 hours * 80px */}
                                 {day.events.map((event) => {
                                     const startTotalMin = event.start.getHours() * 60 + event.start.getMinutes();
                                     let endTotalMin = event.end.getHours() * 60 + event.end.getMinutes();
