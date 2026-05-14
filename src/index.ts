@@ -18,6 +18,7 @@ export * from './components/Avatar/Avatar';
 export * from './components/Chat';
 export * from './components/Stack';
 export * from './components/Dialog/BaseDialog';
+export * from './components/Stepper';
 export * from './components/DataTable/DataTable';
 export * from './components/MovieTicket/MovieTicket';
 export { Badge } from './components/Badge/Badge';

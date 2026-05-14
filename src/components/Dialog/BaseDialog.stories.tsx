@@ -98,3 +98,19 @@ export const LargeSize: Story = {
         ),
     },
 };
+
+export const CustomDimensions: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Custom Dimensions',
+        width: '800px',
+        height: '600px',
+        children: (
+            <div className="flex flex-col items-center justify-center h-full bg-slate-50 dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-6">
+                <p className="text-slate-500 dark:text-slate-400 font-medium text-center">
+                    This dialog has a custom width of 800px and height of 600px.
+                </p>
+            </div>
+        ),
+    },
+};

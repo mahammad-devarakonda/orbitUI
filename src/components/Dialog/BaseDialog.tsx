@@ -8,6 +8,8 @@ export interface BaseDialogProps {
     title?: string;
     children: React.ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl';
+    width?: string;
+    height?: string;
     className?: string;
     showCloseButton?: boolean;
     theme?: 'light' | 'dark' | 'system';
@@ -19,6 +21,8 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
     title,
     children,
     size = 'md',
+    width,
+    height,
     className = '',
     showCloseButton = true,
     theme,
@@ -87,10 +91,14 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
                     opacity-100
                     overflow-hidden
                     flex flex-col
-                    max-h-[90vh]
-                    ${sizeClasses[size]} 
+                    ${height ? '' : 'max-h-[90vh]'}
+                    ${width ? '' : sizeClasses[size]} 
                     ${className}
                 `}
+                style={{
+                    width: width || undefined,
+                    height: height || undefined,
+                }}
                 role="dialog"
                 aria-modal="true"
             >

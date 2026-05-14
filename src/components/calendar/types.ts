@@ -7,6 +7,8 @@ export interface CalendarEvent {
   end: Date;
   description?: string;
   color?: string; // Hex or CSS color
+  isReadOnly?: boolean;
+  type?: 'MEETING' | 'MOVIE_RELEASE';
 }
 
 export interface CalendarProps {
