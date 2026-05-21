@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 export interface BaseDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    title?: string;
+    title?: string | React.ReactNode;
     children: React.ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     width?: string;
@@ -105,7 +105,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
                 {/* Header */}
                 {(title || showCloseButton) && (
                     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-0 z-10">
-                        {title && <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-6">{title}</h3>}
+                        {title && <div className="flex-1 text-lg font-bold text-gray-900 dark:text-white leading-6">{title}</div>}
                         {showCloseButton && (
                             <Button
                                 variant="ghost"
