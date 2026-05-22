@@ -41,11 +41,28 @@ export type StackProps<T extends React.ElementType = 'div'> = {
      * Justify content along the main axis.
      */
     justifyContent?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+    /**
+     * Shorthand alias for alignItems.
+     */
+    align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+    /**
+     * Shorthand alias for justifyContent.
+     */
+    justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+    /**
+     * If true, centers children along both axes (aligns center and justifies center).
+     */
+    center?: boolean;
+    style?: React.CSSProperties;
     className?: string;
     children?: React.ReactNode;
-} & React.ComponentPropsWithoutRef<T>;
+};
 
-export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
+export type StackComponent = <T extends React.ElementType = 'div'>(
+    props: StackProps<T> & Omit<React.ComponentPropsWithoutRef<T>, keyof StackProps<T>> & { ref?: React.Ref<any> }
+) => React.ReactElement | null;
+
+const InnerStack = <T extends React.ElementType = 'div'>(
     {
         as,
         children,
@@ -56,6 +73,9 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
         divider,
         alignItems,
         justifyContent,
+        align,
+        justify,
+        center,
         className = '',
         style,
         ...props
@@ -73,19 +93,26 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
 
     const alignMap = {
         'start': 'items-start',
+        'flex-start': 'items-start',
         'center': 'items-center',
         'end': 'items-end',
+        'flex-end': 'items-end',
         'stretch': 'items-stretch',
         'baseline': 'items-baseline',
     };
 
     const justifyMap = {
         'start': 'justify-start',
+        'flex-start': 'justify-start',
         'center': 'justify-center',
         'end': 'justify-end',
+        'flex-end': 'justify-end',
         'between': 'justify-between',
+        'space-between': 'justify-between',
         'around': 'justify-around',
+        'space-around': 'justify-around',
         'evenly': 'justify-evenly',
+        'space-evenly': 'justify-evenly',
     };
 
     const wrapMap = {
@@ -117,12 +144,15 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
 
     const effectiveWrap = flexWrap || (wrap ? 'wrap' : 'nowrap');
 
+    const rawAlign = center ? 'center' : (align || alignItems);
+    const rawJustify = center ? 'center' : (justify || justifyContent);
+
     const classes = [
         'flex',
         directionMap[direction],
         wrapMap[effectiveWrap],
-        alignItems ? alignMap[alignItems] : '',
-        justifyContent ? justifyMap[justifyContent] : '',
+        rawAlign ? alignMap[rawAlign] : '',
+        rawJustify ? justifyMap[rawJustify] : '',
         gapClass,
         className
     ].filter(Boolean).join(' ');
@@ -142,6 +172,8 @@ export const Stack = React.forwardRef(<T extends React.ElementType = 'div'>(
             }
         </Component>
     );
-});
+};
 
-Stack.displayName = 'Stack';
+export const Stack = React.forwardRef(InnerStack) as unknown as StackComponent;
+
+(Stack as any).displayName = 'Stack';

@@ -28,6 +28,27 @@ export type { BadgeProps } from './components/Badge/Badge';
 export * from './components/calendar/Calendar';
 export * from './components/calendar/types';
 
+// Dropdown / Profile Menu
+export * from './components/DropdownMenu/DropdownMenu';
 
+// Charts & Analytics System
+export * from './components/charts/theme/theme';
+export * from './components/charts/theme/ChartThemeContext';
+export * from './components/charts/utils/formatters';
+export * from './components/charts/utils/gradients';
+export * from './components/charts/common/ChartContainer';
+export * from './components/charts/common/ChartTooltip';
+export * from './components/charts/common/ChartLegend';
+export * from './components/charts/LineChart/OrbitLineChart';
+export * from './components/charts/AreaChart/OrbitAreaChart';
+export * from './components/charts/BarChart/OrbitBarChart';
+export * from './components/charts/PieChart/OrbitPieChart';
+export * from './components/charts/DonutChart/OrbitDonutChart';
+export * from './components/charts/RadarChart/OrbitRadarChart';
+export * from './components/charts/RadialProgress/OrbitRadialProgress';
+export * from './components/charts/HeatMap/OrbitHeatMap';
+export * from './components/charts/ComposedChart/OrbitComposedChart';
+export * from './components/charts/AnalyticsCard/OrbitAnalyticsCard';
 
-
+// Seat Layout Editor System
+export * from './components/SeatLayout';

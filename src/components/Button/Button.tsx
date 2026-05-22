@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'link' | 'ghost' | 'gradient';
+    variant?: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'link' | 'ghost' | 'gradient' | 'outline';
     size?: 'sm' | 'md' | 'lg' | 'icon';
     rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
     isLoading?: boolean;
@@ -35,6 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
         link: 'bg-transparent text-[#0070f3] hover:underline px-0 py-0 h-auto border-none',
         ghost: 'bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-transparent',
         gradient: `text-white border-none hover:opacity-90 active:scale-95 ${gradient || 'bg-gradient-to-r from-red-500 to-pink-500'}`,
+        outline: 'bg-transparent text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500',
     };
 
     const sizeStyles = {
