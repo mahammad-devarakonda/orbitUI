@@ -8,6 +8,7 @@ interface CardProps {
     className?: string;
     variant?: 'default' | 'glass' | 'transparent';
     noPadding?: boolean;
+    onClick?: () => void;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -18,6 +19,7 @@ export const Card: React.FC<CardProps> = ({
     className = '',
     variant = 'default',
     noPadding = false,
+    onClick,
 }) => {
     const variantClasses = {
         default: 'bg-white border-gray-200 shadow-sm',
@@ -26,7 +28,10 @@ export const Card: React.FC<CardProps> = ({
     };
 
     return (
-        <div className={`rounded-xl border overflow-hidden transition-all duration-300 ${variantClasses[variant]} ${className}`}>
+        <div
+            className={`rounded-xl border overflow-hidden transition-all duration-300 ${variantClasses[variant]} ${className}`}
+            onClick={onClick}
+        >
             {(title || subtitle) && (
                 <div className={`px-6 py-4 border-b ${variant === 'glass' ? 'border-gray-800' : 'border-gray-100'}`}>
                     {title && (
