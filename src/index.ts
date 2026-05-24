@@ -52,3 +52,7 @@ export * from './components/charts/AnalyticsCard/OrbitAnalyticsCard';
 
 // Seat Layout Editor System
 export * from './components/SeatLayout';
+
+// Document Management System
+export * from './components/DocumentManagement';
+
