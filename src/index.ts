@@ -24,6 +24,8 @@ export * from './components/DataTable/DataTable';
 export * from './components/MovieTicket/MovieTicket';
 export { Badge } from './components/Badge/Badge';
 export type { BadgeProps } from './components/Badge/Badge';
+export * from './components/Skeleton/Skeleton';
+
 
 // Calendar
 export * from './components/calendar/Calendar';
@@ -56,4 +58,8 @@ export * from './components/SeatLayout';
 
 // Document Management System
 export * from './components/DocumentManagement';
+
+// Coverflow Carousel
+export * from './components/CoverflowCarousel/CoverflowCarousel';
+
 
