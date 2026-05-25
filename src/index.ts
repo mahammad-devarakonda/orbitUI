@@ -62,4 +62,9 @@ export * from './components/DocumentManagement';
 // Coverflow Carousel
 export * from './components/CoverflowCarousel/CoverflowCarousel';
 
+// Slider Component
+export * from './components/Slider';
+export * from './components/Eventcard/EventCard'
+
+
 
