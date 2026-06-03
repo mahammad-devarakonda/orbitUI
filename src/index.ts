@@ -68,6 +68,5 @@ export * from './components/Breadcrumbs';
 export * from './components/Drawer';
 export * from './components/Section';
 export * from './components/Accordion';
-export * from './components/Theme';
 export * from './components/ProgressBar';
 export * from './utils/cn';

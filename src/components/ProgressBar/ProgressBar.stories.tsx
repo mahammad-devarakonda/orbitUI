@@ -2,18 +2,15 @@ import { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { ProgressBar } from './ProgressBar';
-import { ThemeProvider } from '../Theme/ThemeProvider';
 
 const meta: Meta<typeof ProgressBar> = {
     title: 'Components/ProgressBar',
     component: ProgressBar,
     decorators: [
         (Story) => (
-            <ThemeProvider defaultTheme="system">
-                <div className="p-8 md:p-12 w-full max-w-2xl mx-auto bg-white dark:bg-gray-950 border border-gray-150 dark:border-gray-900 rounded-2xl shadow-sm transition-colors duration-250">
-                    <Story />
-                </div>
-            </ThemeProvider>
+            <div className="p-8 md:p-12 w-full max-w-2xl mx-auto bg-white dark:bg-gray-950 border border-gray-150 dark:border-gray-900 rounded-2xl shadow-sm transition-colors duration-250">
+                <Story />
+            </div>
         ),
     ],
     parameters: {
@@ -193,7 +190,7 @@ const InteractiveProgressDemo = () => {
                     size="sm"
                     glow
                 />
-                
+
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 border border-gray-150 dark:border-gray-800 rounded-xl flex items-center justify-between text-xs font-medium text-gray-600 dark:text-gray-400">
                     <span className="flex items-center gap-1.5">
                         <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
