@@ -4,7 +4,8 @@ import type { SeatType, PricingCategory } from './types';
 import { Stack } from '../Stack';
 import { Typography } from '../Typography/Typography';
 import { Input } from '../Input/Input';
-import { Square, Footprints, Ban, AlertTriangle } from 'lucide-react';
+import { Square, Footprints, Ban, AlertTriangle, Paintbrush, Eraser, MousePointer2 } from 'lucide-react';
+import { Button } from '../Button/Button';
 
 const presetColors = [
     { name: 'Silver', value: 'bg-slate-300 dark:bg-slate-500' },
@@ -23,6 +24,8 @@ export const Toolbar: React.FC = () => {
         activeCategory,
         activeType,
         categories,
+        selectedTool,
+        setSelectedTool,
         setActiveCategory,
         setActiveType,
         updateDimensions,
@@ -102,6 +105,49 @@ export const Toolbar: React.FC = () => {
                 </Stack>
             </Stack>
 
+            {/* Editing Tools */}
+            <Stack className="space-y-3">
+                <Typography
+                    variant="caption"
+                    weight="extrabold"
+                    className="uppercase tracking-[0.2em] text-[10px] text-slate-400 dark:text-slate-500"
+                >
+                    Editing Tools
+                </Typography>
+                <Stack direction="row" spacing={2} className="bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-850">
+                    <Button
+                        variant={selectedTool === 'select' ? 'primary' : 'ghost'}
+                        size="icon"
+                        onClick={() => setSelectedTool('select')}
+                        disabled={readOnly}
+                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'select' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
+                        title="Select"
+                    >
+                        <MousePointer2 size={18} />
+                    </Button>
+                    <Button
+                        variant={selectedTool === 'paint' ? 'primary' : 'ghost'}
+                        size="icon"
+                        onClick={() => setSelectedTool('paint')}
+                        disabled={readOnly}
+                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'paint' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
+                        title="Paint"
+                    >
+                        <Paintbrush size={18} />
+                    </Button>
+                    <Button
+                        variant={selectedTool === 'erase' ? 'primary' : 'ghost'}
+                        size="icon"
+                        onClick={() => setSelectedTool('erase')}
+                        disabled={readOnly}
+                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'erase' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
+                        title="Erase"
+                    >
+                        <Eraser size={18} />
+                    </Button>
+                </Stack>
+            </Stack>
+
             {/* Pricing Categories */}
             <Stack className="space-y-3">
                 <Typography
@@ -113,7 +159,7 @@ export const Toolbar: React.FC = () => {
                 </Typography>
                 <Stack className="space-y-1.5">
                     {categories.map((cat) => {
-                        const isActive = activeCategory === cat.id && activeType === 'seat';
+                        const isActive = activeCategory === cat.id && activeType === 'seat' && selectedTool === 'paint';
                         const isDefault = ['silver', 'gold', 'vip'].includes(cat.id);
                         return (
                             <div
@@ -124,6 +170,7 @@ export const Toolbar: React.FC = () => {
                                     onClick={() => {
                                         if (readOnly) return;
                                         setActiveCategory(cat.id);
+                                        setSelectedTool('paint');
                                         setActiveType('seat');
                                     }}
                                     className={`flex items-center space-x-3 p-2.5 rounded-2xl cursor-pointer transition-all duration-300 border pr-8
@@ -243,7 +290,7 @@ export const Toolbar: React.FC = () => {
                 <Stack className="space-y-1.5">
                     {seatTypes.map((type) => {
                         const isNormalSeat = type.id === 'seat';
-                        const isActive = activeType === type.id && (!isNormalSeat || !activeCategory);
+                        const isActive = activeType === type.id && (!isNormalSeat || !activeCategory) && selectedTool === 'paint';
 
                         return (
                             <div
@@ -251,6 +298,7 @@ export const Toolbar: React.FC = () => {
                                 onClick={() => {
                                     if (readOnly) return;
                                     setActiveType(type.id as SeatType);
+                                    setSelectedTool('paint');
                                     if (isNormalSeat) {
                                         setActiveCategory('');
                                     }

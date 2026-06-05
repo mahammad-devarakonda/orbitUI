@@ -64,6 +64,7 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         return resolvedCategories[0]?.id || '';
     });
     const [activeType, setActiveType] = useState<SeatType>('seat');
+    const [selectedTool, setSelectedTool] = useState<'select' | 'paint' | 'erase'>('paint');
 
     // Sync active category if resolvedCategories change and active is no longer valid
     useEffect(() => {
@@ -211,6 +212,8 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         activeCategory,
         activeType,
         categories: resolvedCategories,
+        selectedTool,
+        setSelectedTool,
         setActiveCategory,
         setActiveType,
         updateCell,
@@ -226,6 +229,7 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         activeCategory,
         activeType,
         resolvedCategories,
+        selectedTool,
         updateCell,
         updateDimensions,
         toggleDividerRow,

@@ -15,6 +15,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
         readOnly: contextReadOnly,
         activeCategory,
         activeType,
+        selectedTool,
         updateCell,
         toggleDividerRow,
         toggleDividerCol
@@ -25,20 +26,18 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
     const handleInteract = useCallback((row: number, col: number) => {
         if (readOnly || !layout) return;
 
-        const currentCell = layout.grid[`${row}_${col}`];
         let data: Partial<CellData> = {};
-
-        const isSameType = currentCell?.type === activeType;
-        const isSameCategory = activeType !== 'seat' || currentCell?.category === activeCategory;
-
-        if (isSameType && isSameCategory && currentCell?.type !== 'empty') {
+        if (selectedTool === 'erase') {
             data = { type: 'empty', category: undefined };
-        } else {
+        } else if (selectedTool === 'paint') {
             data = { type: activeType, category: activeType === 'seat' ? activeCategory : undefined };
+        } else if (selectedTool === 'select') {
+            const currentCell = layout.grid[`${row}_${col}`];
+            data = { type: currentCell?.type === 'aisle' ? 'seat' : 'aisle', category: undefined };
         }
 
         updateCell(row, col, data);
-    }, [readOnly, layout, activeCategory, activeType, updateCell]);
+    }, [readOnly, layout, selectedTool, activeCategory, activeType, updateCell]);
 
     const handleToggleDividerRow = useCallback((row: number) => {
         if (readOnly) return;

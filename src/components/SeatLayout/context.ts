@@ -7,6 +7,8 @@ export interface SeatLayoutEditorContextType {
     activeCategory: string;
     activeType: SeatType;
     categories: PricingCategory[];
+    selectedTool: 'select' | 'paint' | 'erase';
+    setSelectedTool: (tool: 'select' | 'paint' | 'erase') => void;
     setActiveCategory: (category: string) => void;
     setActiveType: (type: SeatType) => void;
     updateCell: (row: number, col: number, data: Partial<CellData>) => void;

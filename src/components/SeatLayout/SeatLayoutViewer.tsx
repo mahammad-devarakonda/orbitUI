@@ -33,6 +33,8 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
         activeCategory: '',
         activeType: 'seat',
         categories: resolvedCategories,
+        selectedTool: 'paint',
+        setSelectedTool: () => { },
         setActiveCategory: () => { },
         setActiveType: () => { },
         updateCell: () => { },

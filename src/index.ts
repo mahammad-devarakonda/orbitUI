@@ -70,3 +70,5 @@ export * from './components/Section';
 export * from './components/Accordion';
 export * from './components/ProgressBar';
 export * from './utils/cn';
+export * from './components/DocumentManagement';
+
