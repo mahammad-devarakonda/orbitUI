@@ -18,6 +18,11 @@ export interface SeatLayoutEditorContextType {
     addCategory: (category: PricingCategory) => void;
     removeCategory: (id: string) => void;
     updateDividerName: (row: number, name: string) => void;
+    selectable?: boolean;
+    selectedSeats?: string[];
+    bookedSeats?: string[];
+    lockedSeats?: string[];
+    onSeatClick?: (row: number, col: number) => void;
 }
 
 export const SeatLayoutEditorContext = createContext<SeatLayoutEditorContextType | undefined>(undefined);

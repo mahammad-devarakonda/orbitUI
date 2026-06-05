@@ -5,6 +5,7 @@ import type { SeatLayoutEditorContextType } from './context';
 import { Toolbar } from './Toolbar';
 import { EditorCanvas } from './EditorCanvas';
 import { Stack } from '../Stack';
+import { Typography } from '../Typography/Typography';
 
 export const createDefaultLayout = (rows = 10, cols = 15): LayoutData => {
     const grid: Record<string, CellData> = {};
@@ -238,6 +239,16 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         removeCategory,
         updateDividerName
     ]);
+
+    if (!layout) {
+        return (
+            <Stack alignItems="center" justifyContent="center" className="h-full w-full py-12 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800">
+                <Typography variant="body2" className="text-slate-450 dark:text-slate-500 animate-pulse">
+                    Initializing layout...
+                </Typography>
+            </Stack>
+        );
+    }
 
     return (
         <SeatLayoutEditorContext.Provider value={contextValue}>

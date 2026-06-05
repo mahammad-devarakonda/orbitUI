@@ -12,8 +12,13 @@ interface SeatCellProps {
 }
 
 const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabel }) => {
-    const { categories, readOnly } = useSeatLayoutEditor();
+    const { categories, readOnly, selectable, selectedSeats, bookedSeats, lockedSeats, onSeatClick } = useSeatLayoutEditor();
     const categoryInfo = categories.find(c => c.id === cell?.category);
+
+    const cellKey = `${row}_${col}`;
+    const isSelected = selectedSeats?.includes(cellKey);
+    const isBooked = bookedSeats?.includes(cellKey);
+    const isLocked = lockedSeats?.includes(cellKey);
 
     // In readOnly mode, hide damaged and empty seats by treating them as aisles (invisible gaps)
     const effectiveType = (readOnly && (cell?.type === 'damaged' || !cell || cell?.type === 'empty')) 
@@ -21,6 +26,13 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
         : (cell?.type || 'empty');
 
     const getTypeStyles = (type: SeatType, category?: string) => {
+        if (selectable && (isBooked || isLocked)) {
+            return 'bg-zinc-900 border-zinc-950 text-zinc-700 cursor-not-allowed select-none opacity-40';
+        }
+        if (selectable && isSelected) {
+            return 'bg-rose-600 border-rose-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.4)] scale-105 ring-2 ring-rose-500/20 hover:bg-rose-500';
+        }
+
         switch (type) {
             case 'aisle':
                 return 'bg-transparent border-transparent shadow-none cursor-default';
@@ -72,10 +84,16 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
                 ${isAisle ? 'opacity-20 pointer-events-none' : 'hover:scale-110 hover:shadow-md hover:z-10 active:scale-95'}
                 ${isEmpty ? 'opacity-60 hover:opacity-100' : ''}`}
             style={customStyle}
-            onMouseEnter={(e) => e.buttons === 1 && onInteract(row, col)}
+            onMouseEnter={(e) => !selectable && e.buttons === 1 && onInteract(row, col)}
             onMouseDown={(e) => {
                 e.preventDefault();
-                onInteract(row, col);
+                if (selectable) {
+                    if (isBooked || isLocked) return;
+                    if (effectiveType !== 'seat' && effectiveType !== 'wheelchair') return;
+                    if (onSeatClick) onSeatClick(row, col);
+                } else {
+                    onInteract(row, col);
+                }
             }}
         >
             {!isAisle && !isEmpty && (

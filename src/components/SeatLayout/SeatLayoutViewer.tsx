@@ -15,6 +15,11 @@ export interface SeatLayoutViewerProps {
     categories?: PricingCategory[];
     className?: string;
     style?: React.CSSProperties;
+    selectable?: boolean;
+    selectedSeats?: string[];
+    bookedSeats?: string[];
+    lockedSeats?: string[];
+    onSeatClick?: (row: number, col: number) => void;
 }
 
 export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
@@ -22,6 +27,11 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
     categories: categoriesProp,
     className = '',
     style,
+    selectable = false,
+    selectedSeats = [],
+    bookedSeats = [],
+    lockedSeats = [],
+    onSeatClick,
 }) => {
     const resolvedCategories = useMemo<PricingCategory[]>(() => {
         return layout?.categories || categoriesProp || defaultCategories;
@@ -43,8 +53,13 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
         toggleDividerCol: () => { },
         addCategory: () => { },
         removeCategory: () => { },
-        updateDividerName: () => { }
-    }), [layout, resolvedCategories]);
+        updateDividerName: () => { },
+        selectable,
+        selectedSeats,
+        bookedSeats,
+        lockedSeats,
+        onSeatClick
+    }), [layout, resolvedCategories, selectable, selectedSeats, bookedSeats, lockedSeats, onSeatClick]);
 
     if (!layout) {
         return (
