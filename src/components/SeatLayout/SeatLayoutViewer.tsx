@@ -24,11 +24,11 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
     style,
 }) => {
     const resolvedCategories = useMemo<PricingCategory[]>(() => {
-        return layout.categories || categoriesProp || defaultCategories;
-    }, [layout.categories, categoriesProp]);
+        return layout?.categories || categoriesProp || defaultCategories;
+    }, [layout?.categories, categoriesProp]);
 
     const contextValue = useMemo<SeatLayoutEditorContextType>(() => ({
-        layout,
+        layout: layout || { dimensions: { rows: 0, cols: 0 }, grid: {} },
         readOnly: true,
         activeCategory: '',
         activeType: 'seat',
@@ -45,6 +45,17 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
         removeCategory: () => { },
         updateDividerName: () => { }
     }), [layout, resolvedCategories]);
+
+    if (!layout) {
+        return (
+            <div
+                className={`flex items-center justify-center w-full h-full p-12 text-slate-450 dark:text-slate-500 animate-pulse ${className}`}
+                style={style}
+            >
+                Loading layout...
+            </div>
+        );
+    }
 
     return (
         <SeatLayoutEditorContext.Provider value={contextValue}>

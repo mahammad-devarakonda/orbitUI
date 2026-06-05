@@ -57,8 +57,8 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
     }, [value, internalLayout]);
 
     const resolvedCategories = useMemo<PricingCategory[]>(() => {
-        return layout.categories || categoriesProp || defaultCategories;
-    }, [layout.categories, categoriesProp]);
+        return layout?.categories || categoriesProp || defaultCategories;
+    }, [layout?.categories, categoriesProp]);
 
     const [activeCategory, setActiveCategory] = useState<string>(() => {
         return resolvedCategories[0]?.id || '';
