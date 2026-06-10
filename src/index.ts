@@ -26,15 +26,9 @@ export { Badge } from './components/Badge/Badge';
 export type { BadgeProps } from './components/Badge/Badge';
 export * from './components/Skeleton/Skeleton';
 export * from './components/Divider';
-
-// Calendar
 export * from './components/calendar/Calendar';
 export * from './components/calendar/types';
-
-// Dropdown / Profile Menu
 export * from './components/DropdownMenu/DropdownMenu';
-
-// Charts & Analytics System
 export * from './components/charts/theme/theme';
 export * from './components/charts/theme/ChartThemeContext';
 export * from './components/charts/utils/formatters';
@@ -52,23 +46,23 @@ export * from './components/charts/RadialProgress/OrbitRadialProgress';
 export * from './components/charts/HeatMap/OrbitHeatMap';
 export * from './components/charts/ComposedChart/OrbitComposedChart';
 export * from './components/charts/AnalyticsCard/OrbitAnalyticsCard';
-
-// Seat Layout Editor System
 export * from './components/SeatLayout';
-
-// Coverflow Carousel
 export * from './components/CoverflowCarousel/CoverflowCarousel';
-
-// Slider Component
 export * from './components/Slider';
 export * from './components/Eventcard/EventCard';
-
-// New Core Components
 export * from './components/Breadcrumbs';
 export * from './components/Drawer';
 export * from './components/Section';
 export * from './components/Accordion';
 export * from './components/ProgressBar';
 export * from './utils/cn';
+export * from './components/OtpInput/OtpInput';
+export * from './components/SearchBar/SearchBar';
+export * from './components/Checkbox/Checkbox';
 export * from './components/DocumentManagement';
+export * from './components/DashboardGrid/DashboardGrid';
+export * from './components/Filter/Filter';
+
+
+
 
