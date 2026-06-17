@@ -62,6 +62,7 @@ export * from './components/Checkbox/Checkbox';
 export * from './components/DocumentManagement';
 export * from './components/DashboardGrid/DashboardGrid';
 export * from './components/Filter/Filter';
+export * from './components/Timeline';
 
 
 
