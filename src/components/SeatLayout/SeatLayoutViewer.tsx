@@ -5,9 +5,9 @@ import type { SeatLayoutEditorContextType } from './context';
 import { EditorCanvas } from './EditorCanvas';
 
 const defaultCategories: PricingCategory[] = [
-    { id: 'silver', name: 'Silver', color: 'bg-slate-300 dark:bg-slate-500' },
-    { id: 'gold', name: 'Gold', color: 'bg-yellow-300 dark:bg-yellow-500' },
-    { id: 'vip', name: 'VIP', color: 'bg-amber-400 dark:bg-amber-500' },
+    { id: 'silver', name: 'Silver', color: 'bg-slate-300 dark:bg-slate-500', price: 150 },
+    { id: 'gold', name: 'Gold', color: 'bg-yellow-300 dark:bg-yellow-500', price: 250 },
+    { id: 'vip', name: 'VIP', color: 'bg-amber-400 dark:bg-amber-500', price: 350 },
 ];
 
 export interface SeatLayoutViewerProps {

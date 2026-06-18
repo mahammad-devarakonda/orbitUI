@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SeatLayoutViewer } from './SeatLayoutViewer';
 import type { LayoutData } from './types';
@@ -103,10 +104,22 @@ export const DefaultViewer: Story = {
         value: demoLayout,
     },
     render: (args) => {
+        const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+        const handleSeatClick = (row: number, col: number) => {
+            const key = `${row}_${col}`;
+            setSelectedSeats(prev =>
+                prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+            );
+        };
         return (
             <div className="p-8 bg-slate-100 dark:bg-slate-950 min-h-screen flex items-center justify-center">
                 <div className="w-full max-w-4xl">
-                    <SeatLayoutViewer {...args} />
+                    <SeatLayoutViewer
+                        {...args}
+                        selectable={true}
+                        selectedSeats={selectedSeats}
+                        onSeatClick={handleSeatClick}
+                    />
                 </div>
             </div>
         );

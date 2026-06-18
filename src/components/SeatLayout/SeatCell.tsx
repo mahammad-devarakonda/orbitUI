@@ -11,8 +11,9 @@ interface SeatCellProps {
     rowLabel?: string;
 }
 
+
 const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabel }) => {
-    const { categories, readOnly, selectable, selectedSeats, bookedSeats, lockedSeats, onSeatClick } = useSeatLayoutEditor();
+    const { layout, categories, readOnly, selectable, selectedSeats, bookedSeats, lockedSeats, onSeatClick } = useSeatLayoutEditor();
     const categoryInfo = categories.find(c => c.id === cell?.category);
 
     const cellKey = `${row}_${col}`;
@@ -20,17 +21,33 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
     const isBooked = bookedSeats?.includes(cellKey);
     const isLocked = lockedSeats?.includes(cellKey);
 
-    // In readOnly mode, hide damaged and empty seats by treating them as aisles (invisible gaps)
-    const effectiveType = (readOnly && (cell?.type === 'damaged' || !cell || cell?.type === 'empty')) 
-        ? 'aisle' 
+    // In readOnly mode, hide damaged, blocked and empty seats by treating them as aisles (invisible gaps)
+    const effectiveType = (readOnly && (cell?.type === 'damaged' || cell?.type === 'blocked' || !cell || cell?.type === 'empty'))
+        ? 'aisle'
         : (cell?.type || 'empty');
+
+    const seatNumber = React.useMemo(() => {
+        if (!layout) return col + 1;
+        let count = 0;
+        for (let c = 0; c <= col; c++) {
+            const currentCell = layout.grid[`${row}_${c}`];
+            // In readOnly mode, we hide damaged, blocked, empty, or undefined cells
+            const isHidden = readOnly && (!currentCell || currentCell.type === 'damaged' || currentCell.type === 'blocked' || currentCell.type === 'empty');
+            const cellType = isHidden ? 'aisle' : (currentCell?.type || 'empty');
+
+            if (cellType === 'seat' || cellType === 'wheelchair') {
+                count++;
+            }
+        }
+        return count;
+    }, [layout, row, col, readOnly]);
 
     const getTypeStyles = (type: SeatType, category?: string) => {
         if (selectable && (isBooked || isLocked)) {
             return 'bg-zinc-900 border-zinc-950 text-zinc-700 cursor-not-allowed select-none opacity-40';
         }
         if (selectable && isSelected) {
-            return 'bg-rose-600 border-rose-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.4)] scale-105 ring-2 ring-rose-500/20 hover:bg-rose-500';
+            return 'bg-green-400 border-green-500 text-black shadow-[0_0_12px_rgba(34,197,94,0.15)] scale-105 ring-1 ring-green-200';
         }
 
         switch (type) {
@@ -39,12 +56,18 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
             case 'empty':
                 return 'bg-slate-100 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 border-dashed shadow-inner';
             case 'wheelchair':
-                return 'bg-gradient-to-br from-blue-400 to-blue-600 border-blue-700 text-white shadow-md shadow-blue-500/20 hover:from-blue-500 hover:to-blue-700';
+                if (readOnly) {
+                    return 'bg-white dark:bg-slate-900 border-slate-300 text-slate-600 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850/20';
+                }
+                return 'border-black text-white shadow-md shadow-blue-500/20 hover:from-blue-500 hover:to-blue-700';
             case 'blocked':
                 return 'bg-gradient-to-br from-slate-600 to-slate-800 border-slate-900 text-slate-100 shadow-inner opacity-75';
             case 'damaged':
                 return 'bg-gradient-to-br from-red-400 to-red-600 border-red-700 text-white shadow-md shadow-red-500/20 hover:from-red-500 hover:to-red-700';
             case 'seat':
+                if (readOnly) {
+                    return 'bg-white dark:bg-slate-900 border-slate-300 text-slate-600 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850/20';
+                }
                 if (category === 'vip') {
                     return 'bg-gradient-to-br from-amber-300 to-amber-500 border-amber-600 text-amber-950 shadow-md shadow-amber-300/30 dark:shadow-amber-500/10 hover:from-amber-400 hover:to-amber-600';
                 }
@@ -69,12 +92,13 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
     const isAisle = effectiveType === 'aisle';
     const isEmpty = effectiveType === 'empty';
 
-    const isCustomHexColor = effectiveType === 'seat' && categoryInfo && !categoryInfo.color.startsWith('bg-');
+    const isCustomHexColor = !readOnly && effectiveType === 'seat' && categoryInfo && !categoryInfo.color.startsWith('bg-');
     const customStyle = isCustomHexColor
         ? {
-              backgroundColor: categoryInfo.color,
-              borderColor: categoryInfo.color,
-          }
+            backgroundColor: categoryInfo.color,
+            borderColor: categoryInfo.color,
+            color: undefined,
+        }
         : undefined;
 
     return (
@@ -101,10 +125,12 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
                     {cell?.type === 'blocked'
                         ? 'Block'
                         : cell?.type === 'damaged'
-                        ? 'Dmg'
-                        : cell?.type === 'wheelchair'
-                        ? <Accessibility size={16} strokeWidth={2.5} />
-                        : cell?.id || `${rowLabel || String.fromCharCode(65 + row)}${col + 1}`}
+                            ? 'Dmg'
+                            : cell?.type === 'wheelchair'
+                                ? <Accessibility size={16} strokeWidth={2.5} />
+                                : readOnly && cell?.type === 'seat'
+                                    ? seatNumber.toString()
+                                    : cell?.id || `${rowLabel || String.fromCharCode(65 + row)}${col + 1}`}
                 </span>
             )}
         </div>

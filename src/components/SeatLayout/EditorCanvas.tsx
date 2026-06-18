@@ -18,7 +18,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
         selectedTool,
         updateCell,
         toggleDividerRow,
-        toggleDividerCol
+        toggleDividerCol,
+        categories
     } = useSeatLayoutEditor();
 
     const readOnly = propReadOnly !== undefined ? propReadOnly : contextReadOnly;
@@ -98,12 +99,46 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
         return dividerCols.includes(c) ? '16px' : '32px';
     }).join(' ');
 
+    // Find the category of the first section if row 0 is not a divider
+    const showTopCategory = !dividerRows.includes(0);
+    let firstCat = null;
+    if (showTopCategory && layout) {
+        let categoryId = '';
+        for (let r = 0; r < rows; r++) {
+            if (dividerRows.includes(r)) {
+                break; // Stop at first divider
+            }
+            for (let c = 0; c < cols; c++) {
+                const cell = layout.grid[`${r}_${c}`];
+                if (cell?.category) {
+                    categoryId = cell.category;
+                    break;
+                }
+            }
+            if (categoryId) break;
+        }
+        if (categoryId) {
+            firstCat = categories.find(c => c.id === categoryId) || null;
+        }
+    }
+
     return (
         <Stack
             alignItems="center"
             className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl/40 overflow-auto max-h-[600px] w-full no-scrollbar"
         >
             <div className="relative group p-4 min-w-max">
+                {firstCat && (
+                    <div className="flex justify-center mb-4 ml-10">
+                        <Typography
+                            variant="body2"
+                            weight="bold"
+                            className="text-slate-855 dark:text-slate-200 select-none"
+                        >
+                            {firstCat.name}{firstCat.price !== undefined ? `: ₹${firstCat.price.toFixed(2)}` : ''}
+                        </Typography>
+                    </div>
+                )}
 
 
                 {/* Column Headers */}
@@ -156,7 +191,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
                                     weight="extrabold"
                                     className="text-[10px] text-slate-300 dark:text-slate-600 select-none"
                                 >
-                                    {info.isDivider ? '—' : info.label}
+                                    {info.isDivider ? '' : info.label}
                                 </Typography>
                             </div>
                         ))}
@@ -178,13 +213,41 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
                                         className="h-8 flex items-center justify-center relative group/divider"
                                         style={{ gridColumn: `span ${cols}` }}
                                     >
-                                        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                                            <div className="w-full border-t-2 border-dashed border-slate-200 dark:border-slate-800 group-hover/divider:border-purple-300 dark:group-hover/divider:border-purple-800 transition-colors" />
-                                        </div>
                                         <div className="relative flex justify-center">
-                                            <span className="px-3 bg-white dark:bg-slate-900 text-[10px] font-black text-purple-600 dark:text-purple-450 uppercase tracking-[0.2em] group-hover/divider:text-purple-500 transition-colors select-none">
-                                                {layout.dividerNames?.[r] || 'Stage Divider'}
-                                            </span>
+                                            <Typography
+                                                variant="body2"
+                                                weight="bold"
+                                                className="text-slate-850 dark:text-slate-200 select-none"
+                                            >
+                                                {(() => {
+                                                    if (layout.dividerNames?.[r]) {
+                                                        return layout.dividerNames[r];
+                                                    }
+                                                    // Find the category of seats below this divider
+                                                    let categoryId = '';
+                                                    for (let rowIdx = r + 1; rowIdx < rows; rowIdx++) {
+                                                        if (dividerRows.includes(rowIdx)) {
+                                                            break; // Stop at next divider
+                                                        }
+                                                        for (let colIdx = 0; colIdx < cols; colIdx++) {
+                                                            const cell = layout.grid[`${rowIdx}_${colIdx}`];
+                                                            if (cell?.category) {
+                                                                categoryId = cell.category;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (categoryId) break;
+                                                    }
+                                                    if (categoryId) {
+                                                        const cat = categories.find(c => c.id === categoryId);
+                                                        if (cat) {
+                                                            const priceStr = cat.price !== undefined ? `: ₹${cat.price.toFixed(2)}` : '';
+                                                            return `${cat.name}${priceStr}`;
+                                                        }
+                                                    }
+                                                    return 'Stage Divider';
+                                                })()}
+                                            </Typography>
                                         </div>
                                         {!readOnly && (
                                             <button

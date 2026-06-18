@@ -37,6 +37,7 @@ export const Toolbar: React.FC = () => {
     } = useSeatLayoutEditor();
 
     const [newCatName, setNewCatName] = useState('');
+    const [newCatPrice, setNewCatPrice] = useState('');
     const [selectedColor, setSelectedColor] = useState('bg-slate-300 dark:bg-slate-500');
 
     const handleAddCategory = () => {
@@ -45,10 +46,12 @@ export const Toolbar: React.FC = () => {
         const newCat: PricingCategory = {
             id,
             name: newCatName.trim(),
-            color: selectedColor
+            color: selectedColor,
+            price: Number(newCatPrice) || undefined
         };
         addCategory(newCat);
         setNewCatName('');
+        setNewCatPrice('');
         // Automatically select the newly created category
         setActiveCategory(id);
         setActiveType('seat');
@@ -193,7 +196,7 @@ export const Toolbar: React.FC = () => {
                                         weight={isActive ? 'bold' : 'medium'}
                                         className="capitalize text-slate-700 dark:text-slate-200 truncate flex-1"
                                     >
-                                        {cat.name}
+                                        {cat.name} {cat.price !== undefined ? `(Rs. ${cat.price})` : ''}
                                     </Typography>
                                 </div>
                                 {!readOnly && !isDefault && (
@@ -226,6 +229,13 @@ export const Toolbar: React.FC = () => {
                                 placeholder="Category name (e.g. Platinum, Regular)"
                                 value={newCatName}
                                 onChange={(e) => setNewCatName(e.target.value)}
+                                className="w-full text-xs"
+                            />
+                            <Input
+                                placeholder="Price (e.g. 150)"
+                                type="number"
+                                value={newCatPrice}
+                                onChange={(e) => setNewCatPrice(e.target.value)}
                                 className="w-full text-xs"
                             />
                             
