@@ -36,6 +36,10 @@ export interface SeatLayoutEditorProps {
     className?: string;
     style?: React.CSSProperties;
     categories?: PricingCategory[];
+    width?: string | number;
+    height?: string | number;
+    canvasWidth?: string | number;
+    canvasHeight?: string | number;
 }
 
 export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
@@ -45,7 +49,11 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
     readOnly = false,
     className = '',
     style,
-    categories: categoriesProp
+    categories: categoriesProp,
+    width,
+    height,
+    canvasWidth,
+    canvasHeight
 }) => {
     // Uncontrolled state fallback
     const [internalLayout, setInternalLayout] = useState<LayoutData>(() => {
@@ -207,6 +215,8 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         });
     }, [layout, readOnly, handleLayoutChange]);
 
+    const [zoom, setZoom] = useState(1);
+
     const contextValue = useMemo<SeatLayoutEditorContextType>(() => ({
         layout,
         readOnly,
@@ -223,7 +233,9 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         toggleDividerCol,
         addCategory,
         removeCategory,
-        updateDividerName
+        updateDividerName,
+        zoom,
+        setZoom
     }), [
         layout,
         readOnly,
@@ -237,7 +249,9 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         toggleDividerCol,
         addCategory,
         removeCategory,
-        updateDividerName
+        updateDividerName,
+        zoom,
+        setZoom
     ]);
 
     if (!layout) {
@@ -256,11 +270,11 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
                 direction="row"
                 spacing={0}
                 className={`bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden h-full w-full shadow-sm border border-slate-100 dark:border-slate-800 ${className}`}
-                style={style}
+                style={{ width, height, ...style }}
             >
                 <Toolbar />
                 <div className="flex-1 bg-slate-50/30 dark:bg-slate-950/10 p-6 md:p-12 flex items-center justify-center overflow-hidden h-full">
-                    <EditorCanvas />
+                    <EditorCanvas width={canvasWidth} height={canvasHeight} />
                 </div>
             </Stack>
         </SeatLayoutEditorContext.Provider>

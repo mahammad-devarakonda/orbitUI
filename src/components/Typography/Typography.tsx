@@ -17,6 +17,8 @@ export interface TypographyProps {
     noWrap?: boolean;
     /** Use a gradient for the text */
     gradient?: boolean | string;
+    /** Click event handler */
+    onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -29,6 +31,7 @@ export const Typography: React.FC<TypographyProps> = ({
     className = '',
     noWrap = false,
     gradient,
+    onClick,
 }) => {
     // Default element mapping logic
     const defaultComponents: Record<string, React.ElementType> = {
@@ -107,7 +110,7 @@ export const Typography: React.FC<TypographyProps> = ({
     ].filter(Boolean).join(' ');
 
     return (
-        <Component className={finalClasses}>
+        <Component className={finalClasses} onClick={onClick}>
             {children}
         </Component>
     );

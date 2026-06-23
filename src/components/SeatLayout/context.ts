@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type { LayoutData, SeatType, CellData, PricingCategory } from './types';
 
 export interface SeatLayoutEditorContextType {
@@ -23,6 +24,8 @@ export interface SeatLayoutEditorContextType {
     bookedSeats?: string[];
     lockedSeats?: string[];
     onSeatClick?: (row: number, col: number) => void;
+    zoom?: number;
+    setZoom?: Dispatch<SetStateAction<number>>;
 }
 
 export const SeatLayoutEditorContext = createContext<SeatLayoutEditorContextType | undefined>(undefined);

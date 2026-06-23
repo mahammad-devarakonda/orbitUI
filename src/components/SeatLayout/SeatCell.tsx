@@ -9,10 +9,11 @@ interface SeatCellProps {
     cell?: CellData;
     onInteract: (row: number, col: number) => void;
     rowLabel?: string;
+    seatSize?: number;
 }
 
 
-const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabel }) => {
+const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabel, seatSize }) => {
     const { layout, categories, readOnly, selectable, selectedSeats, bookedSeats, lockedSeats, onSeatClick } = useSeatLayoutEditor();
     const categoryInfo = categories.find(c => c.id === cell?.category);
 
@@ -93,17 +94,20 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
     const isEmpty = effectiveType === 'empty';
 
     const isCustomHexColor = !readOnly && effectiveType === 'seat' && categoryInfo && !categoryInfo.color.startsWith('bg-');
-    const customStyle = isCustomHexColor
-        ? {
+    const customStyle = {
+        width: seatSize !== undefined ? `${seatSize}px` : undefined,
+        height: seatSize !== undefined ? `${seatSize}px` : undefined,
+        fontSize: seatSize !== undefined ? `${Math.max(6, Math.min(10, seatSize * 0.3))}px` : undefined,
+        ...isCustomHexColor ? {
             backgroundColor: categoryInfo.color,
             borderColor: categoryInfo.color,
-            color: undefined,
-        }
-        : undefined;
+        } : {}
+    };
 
     return (
         <div
-            className={`w-8 h-8 rounded-lg border flex items-center justify-center cursor-pointer transition-all duration-200 shadow-sm select-none
+            className={`rounded-sm border flex items-center justify-center cursor-pointer transition-all duration-200 shadow-sm select-none
+                ${seatSize === undefined ? 'w-8 h-8' : ''}
                 ${getTypeStyles(effectiveType, cell?.category)}
                 ${isAisle ? 'opacity-20 pointer-events-none' : 'hover:scale-110 hover:shadow-md hover:z-10 active:scale-95'}
                 ${isEmpty ? 'opacity-60 hover:opacity-100' : ''}`}
@@ -127,7 +131,7 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
                         : cell?.type === 'damaged'
                             ? 'Dmg'
                             : cell?.type === 'wheelchair'
-                                ? <Accessibility size={16} strokeWidth={2.5} />
+                                ? <Accessibility size={seatSize !== undefined ? Math.max(10, seatSize * 0.5) : 16} strokeWidth={2.5} />
                                 : readOnly && cell?.type === 'seat'
                                     ? seatNumber.toString()
                                     : cell?.id || `${rowLabel || String.fromCharCode(65 + row)}${col + 1}`}

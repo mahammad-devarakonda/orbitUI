@@ -102,6 +102,7 @@ const demoLayout: LayoutData = {
 export const DefaultViewer: Story = {
     args: {
         value: demoLayout,
+        bookedSeats: ['0_0', '0_1', '4_4', '4_5', '6_2'],
     },
     render: (args) => {
         const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
@@ -119,6 +120,9 @@ export const DefaultViewer: Story = {
                         selectable={true}
                         selectedSeats={selectedSeats}
                         onSeatClick={handleSeatClick}
+                        canvasHeight="400px"
+                        canvasWidth="700px"
+                        width="800px"
                     />
                 </div>
             </div>
