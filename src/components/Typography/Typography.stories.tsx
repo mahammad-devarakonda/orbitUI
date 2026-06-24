@@ -21,7 +21,7 @@ export const TypeScale: Story = {
     render: () => (
         <div className="space-y-6">
             <div className="border-b pb-4">
-                <Typography variant="h1">Heading 1</Typography>
+                <Typography variant="h1" onClick={() => { }}>Heading 1</Typography>
                 <Typography variant="caption" className="mt-1">text-5xl / Extra Bold</Typography>
             </div>
             <div className="border-b pb-4">

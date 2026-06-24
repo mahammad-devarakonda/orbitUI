@@ -369,48 +369,46 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ readOnly: propReadOn
                 </div>
             </div>
 
-            {!isConstrained && (
-                <div className="mt-6 flex flex-col items-center gap-2 w-full max-w-md select-none">
-                    <div className="w-full relative h-10 flex items-center justify-center">
-                        <svg
-                            className="w-full h-full absolute inset-0 overflow-visible"
-                            viewBox="0 0 400 30"
+            <div className="mt-6 flex flex-col items-center gap-2 w-full max-w-md select-none shrink-0">
+                <div className="w-full relative h-10 flex items-center justify-center">
+                    <svg
+                        className="w-full h-full absolute inset-0 overflow-visible"
+                        viewBox="0 0 400 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <defs>
+                            <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="transparent" />
+                                <stop offset="15%" stopColor="#818cf8" stopOpacity="0.2" />
+                                <stop offset="50%" stopColor="#c084fc" />
+                                <stop offset="85%" stopColor="#818cf8" stopOpacity="0.2" />
+                                <stop offset="100%" stopColor="transparent" />
+                            </linearGradient>
+                        </defs>
+                        {/* Soft projection glow */}
+                        <path
+                            d="M 10,5 Q 200,25 390,5"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <defs>
-                                <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="transparent" />
-                                    <stop offset="15%" stopColor="#818cf8" stopOpacity="0.2" />
-                                    <stop offset="50%" stopColor="#c084fc" />
-                                    <stop offset="85%" stopColor="#818cf8" stopOpacity="0.2" />
-                                    <stop offset="100%" stopColor="transparent" />
-                                </linearGradient>
-                            </defs>
-                            {/* Soft projection glow */}
-                            <path
-                                d="M 10,5 Q 200,25 390,5"
-                                fill="none"
-                                stroke="url(#screenGrad)"
-                                strokeWidth="6"
-                                opacity="0.2"
-                                strokeLinecap="round"
-                            />
-                            {/* Main screen curve */}
-                            <path
-                                d="M 10,5 Q 200,25 390,5"
-                                fill="none"
-                                stroke="url(#screenGrad)"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                        <span className="text-[10px] tracking-[0.4em] font-extrabold uppercase text-slate-400 dark:text-slate-500 mt-6 relative z-10">
-                            SCREEN
-                        </span>
-                    </div>
+                            stroke="url(#screenGrad)"
+                            strokeWidth="6"
+                            opacity="0.2"
+                            strokeLinecap="round"
+                        />
+                        {/* Main screen curve */}
+                        <path
+                            d="M 10,5 Q 200,25 390,5"
+                            fill="none"
+                            stroke="url(#screenGrad)"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                        />
+                    </svg>
+                    <span className="text-[10px] tracking-[0.4em] font-extrabold uppercase text-slate-400 dark:text-slate-500 mt-6 relative z-10">
+                        SCREEN
+                    </span>
                 </div>
-            )}
+            </div>
 
             {/* Zoom Controls */}
             {!readOnly && (

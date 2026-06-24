@@ -106,6 +106,7 @@ export const Typography: React.FC<TypographyProps> = ({
         alignClass,
         colorClass,
         wrapClass,
+        onClick ? 'cursor-pointer' : '',
         className
     ].filter(Boolean).join(' ');
 
