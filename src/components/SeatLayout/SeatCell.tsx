@@ -43,7 +43,7 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
         return count;
     }, [layout, row, col, readOnly]);
 
-    const getTypeStyles = (type: SeatType, category?: string) => {
+    const getTypeStyles = (type: SeatType) => {
         if (selectable && (isBooked || isLocked)) {
             return 'bg-zinc-900 border-zinc-950 text-zinc-700 cursor-not-allowed select-none opacity-40';
         }
@@ -60,7 +60,7 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
                 if (readOnly) {
                     return 'bg-white dark:bg-slate-900 border-slate-300 text-slate-600 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850/20';
                 }
-                return 'border-black text-white shadow-md shadow-blue-500/20 hover:from-blue-500 hover:to-blue-700';
+                return 'bg-gradient-to-br from-blue-400 to-blue-600 border-blue-700 text-white shadow-md shadow-blue-500/20 hover:from-blue-500 hover:to-blue-700';
             case 'blocked':
                 return 'bg-gradient-to-br from-slate-600 to-slate-800 border-slate-900 text-slate-100 shadow-inner opacity-75';
             case 'damaged':
@@ -68,15 +68,6 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
             case 'seat':
                 if (readOnly) {
                     return 'bg-white dark:bg-slate-900 border-slate-300 text-slate-600 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850/20';
-                }
-                if (category === 'vip') {
-                    return 'bg-gradient-to-br from-amber-300 to-amber-500 border-amber-600 text-amber-950 shadow-md shadow-amber-300/30 dark:shadow-amber-500/10 hover:from-amber-400 hover:to-amber-600';
-                }
-                if (category === 'gold') {
-                    return 'bg-gradient-to-br from-yellow-200 to-yellow-400 border-yellow-500 text-yellow-950 shadow-md shadow-yellow-200/30 dark:shadow-yellow-400/10 hover:from-yellow-300 hover:to-yellow-500';
-                }
-                if (category === 'silver') {
-                    return 'bg-gradient-to-br from-slate-200 to-slate-400 border-slate-500 text-slate-900 dark:text-slate-950 shadow-md shadow-slate-300/30 dark:shadow-slate-400/10 hover:from-slate-300 hover:to-slate-500';
                 }
                 if (categoryInfo) {
                     if (categoryInfo.color.startsWith('bg-')) {
@@ -108,7 +99,7 @@ const SeatCell: React.FC<SeatCellProps> = ({ row, col, cell, onInteract, rowLabe
         <div
             className={`rounded-sm border flex items-center justify-center cursor-pointer transition-all duration-200 shadow-sm select-none
                 ${seatSize === undefined ? 'w-8 h-8' : ''}
-                ${getTypeStyles(effectiveType, cell?.category)}
+                ${getTypeStyles(effectiveType)}
                 ${isAisle ? 'opacity-20 pointer-events-none' : 'hover:scale-110 hover:shadow-md hover:z-10 active:scale-95'}
                 ${isEmpty ? 'opacity-60 hover:opacity-100' : ''}`}
             style={customStyle}

@@ -4,8 +4,7 @@ import type { SeatType, PricingCategory } from './types';
 import { Stack } from '../Stack';
 import { Typography } from '../Typography/Typography';
 import { Input } from '../Input/Input';
-import { Square, Footprints, Ban, AlertTriangle, Paintbrush, Eraser, MousePointer2 } from 'lucide-react';
-import { Button } from '../Button/Button';
+import { Square, Footprints, Ban, AlertTriangle, Edit3, Accessibility } from 'lucide-react';
 
 const presetColors = [
     { name: 'Silver', value: 'bg-slate-300 dark:bg-slate-500' },
@@ -33,21 +32,25 @@ export const Toolbar: React.FC = () => {
         toggleDividerCol,
         addCategory,
         removeCategory,
+        updateCategory,
         updateDividerName
     } = useSeatLayoutEditor();
 
     const [newCatName, setNewCatName] = useState('');
     const [newCatPrice, setNewCatPrice] = useState('');
     const [selectedColor, setSelectedColor] = useState('bg-slate-300 dark:bg-slate-500');
+    const [editingCatId, setEditingCatId] = useState<string | null>(null);
 
     const handleAddCategory = () => {
-        if (!newCatName.trim() || readOnly) return;
+        if (!newCatName.trim() || !newCatPrice.trim() || readOnly) return;
+        const priceNum = Number(newCatPrice);
+        if (isNaN(priceNum) || priceNum <= 0) return;
         const id = newCatName.trim().toLowerCase().replace(/\s+/g, '-');
         const newCat: PricingCategory = {
             id,
             name: newCatName.trim(),
             color: selectedColor,
-            price: Number(newCatPrice) || undefined
+            price: priceNum
         };
         addCategory(newCat);
         setNewCatName('');
@@ -57,9 +60,28 @@ export const Toolbar: React.FC = () => {
         setActiveType('seat');
     };
 
+    const handleUpdateCategory = () => {
+        if (!editingCatId || !newCatName.trim() || !newCatPrice.trim() || readOnly) return;
+        const priceNum = Number(newCatPrice);
+        if (isNaN(priceNum) || priceNum <= 0) return;
+        const id = newCatName.trim().toLowerCase().replace(/\s+/g, '-');
+        const updatedCat: PricingCategory = {
+            id,
+            name: newCatName.trim(),
+            color: selectedColor,
+            price: priceNum
+        };
+        updateCategory(editingCatId, updatedCat);
+        setEditingCatId(null);
+        setNewCatName('');
+        setNewCatPrice('');
+        setActiveCategory(id);
+    };
+
     const seatTypes = [
         { id: 'seat', name: 'Normal Seat', icon: Square, color: 'text-slate-500 dark:text-slate-400' },
         { id: 'aisle', name: 'Walking Path', icon: Footprints, color: 'text-blue-500 dark:text-blue-400' },
+        { id: 'wheelchair', name: 'Wheelchair', icon: Accessibility, color: 'text-sky-500 dark:text-sky-400' },
         { id: 'blocked', name: 'Blocked Seat', icon: Ban, color: 'text-slate-800 dark:text-slate-200' },
         { id: 'damaged', name: 'Damaged Seat', icon: AlertTriangle, color: 'text-red-500 dark:text-red-400' },
     ];
@@ -108,48 +130,7 @@ export const Toolbar: React.FC = () => {
                 </Stack>
             </Stack>
 
-            {/* Editing Tools */}
-            <Stack className="space-y-3">
-                <Typography
-                    variant="caption"
-                    weight="extrabold"
-                    className="uppercase tracking-[0.2em] text-[10px] text-slate-400 dark:text-slate-500"
-                >
-                    Editing Tools
-                </Typography>
-                <Stack direction="row" spacing={2} className="bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-850">
-                    <Button
-                        variant={selectedTool === 'select' ? 'primary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setSelectedTool('select')}
-                        disabled={readOnly}
-                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'select' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
-                        title="Select"
-                    >
-                        <MousePointer2 size={18} />
-                    </Button>
-                    <Button
-                        variant={selectedTool === 'paint' ? 'primary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setSelectedTool('paint')}
-                        disabled={readOnly}
-                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'paint' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
-                        title="Paint"
-                    >
-                        <Paintbrush size={18} />
-                    </Button>
-                    <Button
-                        variant={selectedTool === 'erase' ? 'primary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setSelectedTool('erase')}
-                        disabled={readOnly}
-                        className={`flex-1 p-2.5 min-w-0 rounded-xl transition-all duration-300 ${selectedTool === 'erase' ? 'shadow-md shadow-purple-200 dark:shadow-none bg-[#0070f3] text-white' : 'text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 border-none'}`}
-                        title="Erase"
-                    >
-                        <Eraser size={18} />
-                    </Button>
-                </Stack>
-            </Stack>
+
 
             {/* Pricing Categories */}
             <Stack className="space-y-3">
@@ -163,7 +144,6 @@ export const Toolbar: React.FC = () => {
                 <Stack className="space-y-1.5">
                     {categories.map((cat) => {
                         const isActive = activeCategory === cat.id && activeType === 'seat' && selectedTool === 'paint';
-                        const isDefault = ['silver', 'gold', 'vip'].includes(cat.id);
                         return (
                             <div
                                 key={cat.id}
@@ -176,11 +156,10 @@ export const Toolbar: React.FC = () => {
                                         setSelectedTool('paint');
                                         setActiveType('seat');
                                     }}
-                                    className={`flex items-center space-x-3 p-2.5 rounded-2xl cursor-pointer transition-all duration-300 border pr-8
-                                        ${
-                                            isActive
-                                                ? 'bg-white dark:bg-slate-800 shadow-md border-purple-200 dark:border-purple-800 ring-1 ring-purple-100 dark:ring-transparent scale-[1.02]'
-                                                : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-300'
+                                    className={`flex items-center space-x-3 p-2.5 rounded-2xl cursor-pointer transition-all duration-300 border pr-16
+                                        ${isActive
+                                            ? 'bg-white dark:bg-slate-800 shadow-md border-purple-200 dark:border-purple-800 ring-1 ring-purple-100 dark:ring-transparent scale-[1.02]'
+                                            : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-300'
                                         }`}
                                 >
                                     {cat.color.startsWith('bg-') ? (
@@ -199,19 +178,41 @@ export const Toolbar: React.FC = () => {
                                         {cat.name} {cat.price !== undefined ? `(Rs. ${cat.price})` : ''}
                                     </Typography>
                                 </div>
-                                {!readOnly && !isDefault && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            removeCategory(cat.id);
-                                        }}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/cat:opacity-100 transition-opacity p-1 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer border-none bg-transparent"
-                                        title="Delete Category"
-                                    >
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
+                                {!readOnly && (
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/cat:opacity-100 transition-opacity flex items-center gap-1">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEditingCatId(cat.id);
+                                                setNewCatName(cat.name);
+                                                setNewCatPrice(cat.price !== undefined ? cat.price.toString() : '');
+                                                setSelectedColor(cat.color);
+                                            }}
+                                            className="p-1 text-slate-450 hover:text-purple-650 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer border-none bg-transparent"
+                                            title="Edit Category"
+                                        >
+                                            <Edit3 size={13} />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (editingCatId === cat.id) {
+                                                    setEditingCatId(null);
+                                                    setNewCatName('');
+                                                    setNewCatPrice('');
+                                                }
+                                                removeCategory(cat.id);
+                                            }}
+                                            className="p-1 text-slate-450 hover:text-red-500 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer border-none bg-transparent"
+                                            title="Delete Category"
+                                        >
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         );
@@ -222,7 +223,7 @@ export const Toolbar: React.FC = () => {
                 {!readOnly && (
                     <Stack className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
                         <Typography variant="caption" weight="extrabold" className="uppercase tracking-[0.15em] text-[9px] text-slate-400">
-                            Create Custom Category
+                            {editingCatId ? 'Edit Category' : 'Create Custom Category'}
                         </Typography>
                         <Stack className="space-y-2">
                             <Input
@@ -230,15 +231,17 @@ export const Toolbar: React.FC = () => {
                                 value={newCatName}
                                 onChange={(e) => setNewCatName(e.target.value)}
                                 className="w-full text-xs"
+                                required
                             />
                             <Input
-                                placeholder="Price (e.g. 150)"
+                                placeholder="Price (e.g. 150) *"
                                 type="number"
                                 value={newCatPrice}
                                 onChange={(e) => setNewCatPrice(e.target.value)}
                                 className="w-full text-xs"
+                                required
                             />
-                            
+
                             <Stack className="space-y-1">
                                 <Typography variant="caption" className="text-slate-400 text-[9px] uppercase tracking-wider font-bold">
                                     Select Color
@@ -275,14 +278,38 @@ export const Toolbar: React.FC = () => {
                                 </div>
                             </Stack>
 
-                            <button
-                                type="button"
-                                onClick={handleAddCategory}
-                                disabled={!newCatName.trim()}
-                                className="w-full py-1.5 px-3 text-[10px] uppercase tracking-wider font-extrabold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-slate-100 disabled:dark:bg-slate-800 disabled:text-slate-400 disabled:dark:text-slate-600 rounded-xl transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed text-center border-none"
-                            >
-                                Add Category
-                            </button>
+                            {editingCatId ? (
+                                <Stack direction="row" spacing={2} className="w-full">
+                                    <button
+                                        type="button"
+                                        onClick={handleUpdateCategory}
+                                        disabled={!newCatName.trim() || !newCatPrice.trim() || Number(newCatPrice) <= 0}
+                                        className="flex-1 py-1.5 px-3 text-[10px] uppercase tracking-wider font-extrabold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-slate-100 disabled:dark:bg-slate-800 disabled:text-slate-400 disabled:dark:text-slate-600 rounded-xl transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed text-center border-none"
+                                    >
+                                        Update
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setEditingCatId(null);
+                                            setNewCatName('');
+                                            setNewCatPrice('');
+                                        }}
+                                        className="py-1.5 px-3 text-[10px] uppercase tracking-wider font-extrabold text-slate-500 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl transition-all cursor-pointer text-center border-none"
+                                    >
+                                        Cancel
+                                    </button>
+                                </Stack>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleAddCategory}
+                                    disabled={!newCatName.trim() || !newCatPrice.trim() || Number(newCatPrice) <= 0}
+                                    className="w-full py-1.5 px-3 text-[10px] uppercase tracking-wider font-extrabold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-slate-100 disabled:dark:bg-slate-800 disabled:text-slate-400 disabled:dark:text-slate-600 rounded-xl transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed text-center border-none"
+                                >
+                                    Add Category
+                                </button>
+                            )}
                         </Stack>
                     </Stack>
                 )}
@@ -314,10 +341,9 @@ export const Toolbar: React.FC = () => {
                                     }
                                 }}
                                 className={`flex items-center space-x-3 p-2.5 rounded-2xl cursor-pointer transition-all duration-300 border
-                                    ${
-                                        isActive
-                                            ? 'bg-white dark:bg-slate-800 shadow-md border-purple-200 dark:border-purple-800 ring-1 ring-purple-100 dark:ring-transparent scale-[1.02]'
-                                            : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-300'
+                                    ${isActive
+                                        ? 'bg-white dark:bg-slate-800 shadow-md border-purple-200 dark:border-purple-800 ring-1 ring-purple-100 dark:ring-transparent scale-[1.02]'
+                                        : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-300'
                                     }`}
                             >
                                 <div className={`p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 shadow-sm ${type.color}`}>
@@ -380,10 +406,9 @@ export const Toolbar: React.FC = () => {
                                         onClick={() => toggleDividerRow(r)}
                                         disabled={readOnly}
                                         className={`px-2.5 py-1.5 text-[9px] font-black uppercase tracking-wider rounded-xl border text-center transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed
-                                            ${
-                                                isDivider
-                                                    ? 'bg-purple-600 border-purple-600 text-white shadow-purple-100 dark:shadow-none scale-[1.03]'
-                                                    : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 hover:text-slate-800'
+                                            ${isDivider
+                                                ? 'bg-purple-600 border-purple-600 text-white shadow-purple-100 dark:shadow-none scale-[1.03]'
+                                                : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 hover:text-slate-800'
                                             }`}
                                     >
                                         {label}
@@ -482,10 +507,9 @@ export const Toolbar: React.FC = () => {
                                     onClick={() => toggleDividerCol(c)}
                                     disabled={readOnly}
                                     className={`px-2.5 py-1.5 text-[9px] font-black uppercase tracking-wider rounded-xl border text-center transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed
-                                        ${
-                                            isDivider
-                                                ? 'bg-purple-600 border-purple-600 text-white shadow-purple-100 dark:shadow-none scale-[1.03]'
-                                                : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 hover:text-slate-800'
+                                        ${isDivider
+                                            ? 'bg-purple-600 border-purple-600 text-white shadow-purple-100 dark:shadow-none scale-[1.03]'
+                                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 hover:text-slate-800'
                                         }`}
                                 >
                                     {label}

@@ -3,13 +3,9 @@ import type { LayoutData, PricingCategory } from './types';
 import { SeatLayoutEditorContext } from './context';
 import type { SeatLayoutEditorContextType } from './context';
 import { EditorCanvas } from './EditorCanvas';
-import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Accessibility } from 'lucide-react';
 
-const defaultCategories: PricingCategory[] = [
-    { id: 'silver', name: 'Silver', color: 'bg-slate-300 dark:bg-slate-500', price: 150 },
-    { id: 'gold', name: 'Gold', color: 'bg-yellow-300 dark:bg-yellow-500', price: 250 },
-    { id: 'vip', name: 'VIP', color: 'bg-amber-400 dark:bg-amber-500', price: 350 },
-];
+const defaultCategories: PricingCategory[] = [];
 
 export interface SeatLayoutViewerProps {
     value: LayoutData;
@@ -66,6 +62,7 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
         toggleDividerCol: () => { },
         addCategory: () => { },
         removeCategory: () => { },
+        updateCategory: () => { },
         updateDividerName: () => { },
         selectable,
         selectedSeats,
@@ -110,6 +107,12 @@ export const SeatLayoutViewer: React.FC<SeatLayoutViewerProps> = ({
                             <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 rounded-md bg-zinc-700 border border-zinc-500 opacity-40"></div>
                                 <span>Sold Out</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                                    <Accessibility size={10} strokeWidth={2.5} />
+                                </div>
+                                <span>Wheelchair</span>
                             </div>
                         </div>
 

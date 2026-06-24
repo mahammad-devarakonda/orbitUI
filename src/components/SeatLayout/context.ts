@@ -18,6 +18,7 @@ export interface SeatLayoutEditorContextType {
     toggleDividerCol: (col: number) => void;
     addCategory: (category: PricingCategory) => void;
     removeCategory: (id: string) => void;
+    updateCategory: (id: string, category: PricingCategory) => void;
     updateDividerName: (row: number, name: string) => void;
     selectable?: boolean;
     selectedSeats?: string[];

@@ -22,11 +22,7 @@ export const createDefaultLayout = (rows = 10, cols = 15): LayoutData => {
     };
 };
 
-const defaultCategories: PricingCategory[] = [
-    { id: 'silver', name: 'Silver', color: 'bg-slate-300 dark:bg-slate-500', price: 150 },
-    { id: 'gold', name: 'Gold', color: 'bg-yellow-300 dark:bg-yellow-500', price: 250 },
-    { id: 'vip', name: 'VIP', color: 'bg-amber-400 dark:bg-amber-500', price: 350 },
-];
+const defaultCategories: PricingCategory[] = [];
 
 export interface SeatLayoutEditorProps {
     value?: LayoutData;
@@ -202,6 +198,27 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         });
     }, [layout, categoriesProp, readOnly, handleLayoutChange]);
 
+    const updateCategory = useCallback((catId: string, updatedCat: PricingCategory) => {
+        if (readOnly) return;
+        const currentCats = layout.categories || categoriesProp || defaultCategories;
+        const updatedCats = currentCats.map(c => c.id === catId ? updatedCat : c);
+
+        const newGrid = { ...layout.grid };
+        if (catId !== updatedCat.id) {
+            Object.entries(newGrid).forEach(([key, cell]) => {
+                if (cell.category === catId) {
+                    newGrid[key] = { ...cell, category: updatedCat.id };
+                }
+            });
+        }
+
+        handleLayoutChange({
+            ...layout,
+            grid: newGrid,
+            categories: updatedCats
+        });
+    }, [layout, categoriesProp, readOnly, handleLayoutChange]);
+
     const updateDividerName = useCallback((row: number, name: string) => {
         if (readOnly) return;
         const newNames = {
@@ -233,6 +250,7 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         toggleDividerCol,
         addCategory,
         removeCategory,
+        updateCategory,
         updateDividerName,
         zoom,
         setZoom
@@ -249,6 +267,7 @@ export const SeatLayout: React.FC<SeatLayoutEditorProps> = ({
         toggleDividerCol,
         addCategory,
         removeCategory,
+        updateCategory,
         updateDividerName,
         zoom,
         setZoom
