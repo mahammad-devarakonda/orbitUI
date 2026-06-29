@@ -11,8 +11,11 @@ import { DashboardGrid, type DashboardWidget } from './components/DashboardGrid/
 import { OrbitAreaChart } from './components/charts/AreaChart/OrbitAreaChart';
 import { OrbitBarChart } from './components/charts/BarChart/OrbitBarChart';
 import { 
-  Plus, RotateCcw, Info, ExternalLink, ChevronRight
+  Plus, RotateCcw, Info, ExternalLink, ChevronRight,
+  Sliders, Palette, User, MessageCircle, HelpCircle
 } from 'lucide-react';
+import { ChatBotWidget } from './components/ChatBotWidget/ChatBotWidget';
+
 
 
 export type FilterValue = string | string[] | { start: string; end: string } | boolean;
@@ -97,7 +100,8 @@ const catalogFilters = [
 ];
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'showcase' | 'seats' | 'calendar' | 'otp' | 'filters' | 'documents' | 'console'>('console');
+  const [activeTab, setActiveTab] = useState<'showcase' | 'seats' | 'calendar' | 'otp' | 'filters' | 'documents' | 'console' | 'chatbot'>('console');
+
 
   // Console Home Dashboard States
   const [widgetsLayout, setWidgetsLayout] = useState<{
@@ -156,6 +160,26 @@ function App() {
   });
   const [otpValue, setOtpValue] = useState('');
   const [events, setEvents] = useState<{ text: string; time: string }[]>([]);
+
+  // Chatbot Showcase State
+  const [chatbotConfig, setChatbotConfig] = useState({
+    width: 360,
+    height: 500,
+    position: 'bottom-right' as 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left',
+    botName: 'Orbit AI',
+    status: 'online' as 'online' | 'offline' | 'busy' | 'away',
+    statusText: 'Online',
+    botAvatar: '',
+    greetingMessage: "Hi! I'm Orbit AI. How can I help you build amazing interfaces today?",
+    primaryColor: '#4f46e5',
+    backgroundColor: '#ffffff',
+    textColor: '#1f2937',
+    userMessageBg: '#4f46e5',
+    userMessageTextColor: '#ffffff',
+    botMessageBg: '#f3f4f6',
+    botMessageTextColor: '#1f2937',
+  });
+
 
   const logEvent = (text: string) => {
     const time = new Date().toLocaleTimeString();
@@ -417,6 +441,17 @@ function App() {
           >
             Documents
           </button>
+          <button
+            onClick={() => setActiveTab('chatbot')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition duration-200 cursor-pointer ${
+              activeTab === 'chatbot' 
+                ? 'bg-indigo-600 text-white shadow-md' 
+                : 'text-indigo-200 hover:text-white'
+            }`}
+          >
+            Chatbot 💬
+          </button>
+
         </div>
 
         <div className="flex items-center space-x-2">
@@ -1567,6 +1602,290 @@ function App() {
             </div>
           </div>
         )}
+
+        {activeTab === 'chatbot' && (
+          <div className="h-full w-full p-6 flex flex-col">
+            <div className="mb-4 shrink-0 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Dynamic Chatbot Widget Showcase</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Customize dimensions, colors, identity, and behavior in real-time, or drag the widget to resize it directly.</p>
+              </div>
+              <button 
+                onClick={() => setActiveTab('showcase')}
+                className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-150 dark:hover:bg-slate-850 rounded-lg transition cursor-pointer"
+              >
+                Back to Showcase
+              </button>
+            </div>
+            
+            <div className="flex-grow min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-y-auto pr-2 pb-12">
+              {/* Controls Column */}
+              <div className="lg:col-span-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-sm flex flex-col justify-start">
+                <div className="flex items-center space-x-2 border-b border-slate-150 dark:border-slate-850 pb-2">
+                  <Sliders className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">Configuration Options</h4>
+                </div>
+                
+                {/* Dimensions */}
+                <div className="space-y-4">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 block">Dimensions & Position</span>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350 flex justify-between">
+                      <span>Width</span>
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">{chatbotConfig.width}px</span>
+                    </label>
+                    <input 
+                      type="range" 
+                      min="280" 
+                      max="800" 
+                      value={chatbotConfig.width}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, width: parseInt(e.target.value) }))}
+                      className="w-full accent-indigo-600 cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350 flex justify-between">
+                      <span>Height</span>
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">{chatbotConfig.height}px</span>
+                    </label>
+                    <input 
+                      type="range" 
+                      min="350" 
+                      max="800" 
+                      value={chatbotConfig.height}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, height: parseInt(e.target.value) }))}
+                      className="w-full accent-indigo-600 cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Position on Screen</label>
+                    <select
+                      value={chatbotConfig.position}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, position: e.target.value as any }))}
+                      className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="bottom-right">Bottom Right</option>
+                      <option value="bottom-left">Bottom Left</option>
+                      <option value="top-right">Top Right</option>
+                      <option value="top-left">Top Left</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Bot Identity */}
+                <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-855">
+                  <div className="flex items-center space-x-2">
+                    <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Bot Identity</span>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Bot Name</label>
+                    <input 
+                      type="text" 
+                      value={chatbotConfig.botName}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, botName: e.target.value }))}
+                      className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Status</label>
+                      <select
+                        value={chatbotConfig.status}
+                        onChange={(e) => setChatbotConfig(prev => ({ ...prev, status: e.target.value as any }))}
+                        className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 focus:outline-none"
+                      >
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                        <option value="busy">Busy</option>
+                        <option value="away">Away</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Status Text</label>
+                      <input 
+                        type="text" 
+                        value={chatbotConfig.statusText}
+                        onChange={(e) => setChatbotConfig(prev => ({ ...prev, statusText: e.target.value }))}
+                        className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Greeting Message</label>
+                    <textarea 
+                      value={chatbotConfig.greetingMessage}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, greetingMessage: e.target.value }))}
+                      rows={3}
+                      className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Color Customizer Column */}
+              <div className="lg:col-span-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-sm flex flex-col justify-start">
+                <div className="flex items-center space-x-2 border-b border-slate-150 dark:border-slate-850 pb-2">
+                  <Palette className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">Styling & Colors</h4>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Primary Accent</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.primaryColor}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, primaryColor: e.target.value, userMessageBg: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Chat Background</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.backgroundColor}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">General Text</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.textColor}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, textColor: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">User Message Bubble</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.userMessageBg}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, userMessageBg: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">User Bubble Text</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.userMessageTextColor}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, userMessageTextColor: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Bot Message Bubble</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.botMessageBg}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, botMessageBg: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-350">Bot Bubble Text</label>
+                    <input 
+                      type="color" 
+                      value={chatbotConfig.botMessageTextColor}
+                      onChange={(e) => setChatbotConfig(prev => ({ ...prev, botMessageTextColor: e.target.value }))}
+                      className="w-8 h-8 rounded cursor-pointer border border-gray-250 dark:border-gray-700"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setChatbotConfig({
+                    width: 360,
+                    height: 500,
+                    position: 'bottom-right',
+                    botName: 'Orbit AI',
+                    status: 'online',
+                    statusText: 'Online',
+                    botAvatar: '',
+                    greetingMessage: "Hi! I'm Orbit AI. How can I help you build amazing interfaces today?",
+                    primaryColor: '#4f46e5',
+                    backgroundColor: '#ffffff',
+                    textColor: '#1f2937',
+                    userMessageBg: '#4f46e5',
+                    userMessageTextColor: '#ffffff',
+                    botMessageBg: '#f3f4f6',
+                    botMessageTextColor: '#1f2937',
+                  })}
+                  className="w-full mt-6 py-2 border border-dashed border-red-300 hover:border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/25 rounded-xl text-xs font-bold transition duration-200 cursor-pointer"
+                >
+                  Reset Styles & Settings
+                </button>
+              </div>
+
+              {/* Guide / Live View Column */}
+              <div className="lg:col-span-1 bg-gradient-to-br from-indigo-900 via-indigo-955 to-slate-955 text-white rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="inline-flex p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                    <MessageCircle className="w-8 h-8 text-indigo-200" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold tracking-tight">Active Widget Preview</h3>
+                    <p className="text-indigo-200/80 mt-2 text-sm leading-relaxed">
+                      The chatbot widget is currently active on your screen. Look at the <span className="font-bold text-white uppercase underline decoration-indigo-400 decoration-2">{chatbotConfig.position.replace('-', ' ')}</span> of your window!
+                    </p>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-indigo-300 block">How to resize:</span>
+                    <ul className="text-xs space-y-2 list-disc list-inside text-indigo-150">
+                      <li>Open the chatbot widget by clicking the floating icon in the corner of your screen.</li>
+                      <li>Hover over the top-left corner (or the diagonal arrow icon) of the chat window.</li>
+                      <li>Click and drag to adjust the width and height dynamically!</li>
+                      <li>Observe how the controls in the sidebar update in real-time as you drag.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 text-xs text-indigo-300 bg-indigo-900/50 p-3 rounded-xl border border-indigo-850/50 mt-6">
+                  <HelpCircle className="w-4 h-4 shrink-0 text-indigo-400" />
+                  <span>Try asking the bot: "What is Orbit UI?" or "Is it free?" to test the AI responses!</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Render the actual widget on screen */}
+            <ChatBotWidget 
+              key={`${chatbotConfig.position}-${chatbotConfig.primaryColor}`} // Re-mount if position or theme changes to avoid layoutId issues
+              width={chatbotConfig.width}
+              height={chatbotConfig.height}
+              onResize={(w, h) => setChatbotConfig(prev => ({ ...prev, width: w, height: h }))}
+              position={chatbotConfig.position}
+              botName={chatbotConfig.botName}
+              status={chatbotConfig.status}
+              statusText={chatbotConfig.statusText}
+              botAvatar={chatbotConfig.botAvatar}
+              greetingMessage={chatbotConfig.greetingMessage}
+              primaryColor={chatbotConfig.primaryColor}
+              backgroundColor={chatbotConfig.backgroundColor}
+              textColor={chatbotConfig.textColor}
+              userMessageBg={chatbotConfig.userMessageBg}
+              userMessageTextColor={chatbotConfig.userMessageTextColor}
+              botMessageBg={chatbotConfig.botMessageBg}
+              botMessageTextColor={chatbotConfig.botMessageTextColor}
+            />
+          </div>
+        )}
+
       </div>
     </div>
   );
