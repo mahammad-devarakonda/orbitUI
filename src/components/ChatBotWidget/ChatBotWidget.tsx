@@ -42,6 +42,8 @@ export interface ChatBotWidgetProps {
   className?: string;
   /** Whether the widget should start open */
   defaultOpen?: boolean;
+  /** Custom handler to generate bot response. If provided, overrides the default mock responses. */
+  onResponse?: (message: string) => Promise<string>;
 }
 
 interface Message {
@@ -102,6 +104,7 @@ export const ChatBotWidget: React.FC<ChatBotWidgetProps> = ({
   botMessageTextColor = '#1f2937',
   className = '',
   defaultOpen = false,
+  onResponse,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [localWidth, setLocalWidth] = useState(width);
@@ -200,8 +203,49 @@ export const ChatBotWidget: React.FC<ChatBotWidgetProps> = ({
   };
 
   // Chat Bot response generation
-  const handleBotResponse = (userText: string) => {
+  const handleBotResponse = async (userText: string) => {
     setIsTyping(true);
+
+    if (userText === 'clear') {
+      setMessages([
+        {
+          id: 'greeting',
+          text: greetingMessage,
+          isOwn: false,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }
+      ]);
+      setIsTyping(false);
+      return;
+    }
+
+    if (onResponse) {
+      try {
+        const reply = await onResponse(userText);
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Math.random().toString(),
+            text: reply,
+            isOwn: false,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          }
+        ]);
+      } catch (error) {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Math.random().toString(),
+            text: "⚠️ Sorry, I'm having trouble connecting. Please try again later.",
+            isOwn: false,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          }
+        ]);
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
 
     // Simulate thinking/typing delay
     setTimeout(() => {
@@ -218,17 +262,6 @@ export const ChatBotWidget: React.FC<ChatBotWidgetProps> = ({
         reply = "Orbit UI features over 40+ premium components including Accordion, Calendar, CoverflowCarousel, SeatLayout, OtpInput, DashboardGrid, DocumentManagement, and more!";
       } else if (text.includes('hello') || text.includes('hi') || text.includes('hey')) {
         reply = `Hello! How can I assist you today? I can tell you all about Orbit UI's capabilities.`;
-      } else if (text.includes('clear') || text.includes('reset')) {
-        setMessages([
-          {
-            id: 'greeting',
-            text: greetingMessage,
-            isOwn: false,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          }
-        ]);
-        setIsTyping(false);
-        return;
       }
 
       setMessages(prev => [

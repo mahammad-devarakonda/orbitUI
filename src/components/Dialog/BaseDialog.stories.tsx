@@ -114,3 +114,79 @@ export const CustomDimensions: Story = {
         ),
     },
 };
+
+export const SmallSize: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Small Dialog (sm)',
+        size: 'sm',
+        children: (
+            <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-400">
+                    This is a small dialog box (max-w-sm).
+                </p>
+            </div>
+        ),
+    },
+};
+
+export const MediumSize: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Medium Dialog (md) - 50% Screen',
+        size: 'md',
+        children: (
+            <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-400">
+                    This dialog takes up exactly half (50%) of the screen width on desktop viewports.
+                </p>
+            </div>
+        ),
+    },
+};
+
+export const ExtraLargeSize: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Extra Large Dialog (xl) - 95% Screen',
+        size: 'xl',
+        children: (
+            <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-400">
+                    This dialog covers 90% to 95% of the screen width to maximize work area.
+                </p>
+            </div>
+        ),
+    },
+};
+
+export const RoundedNone: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Sharp Corners Dialog (rounded: none)',
+        rounded: 'none',
+        children: (
+            <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-400">
+                    This dialog has sharp, non-rounded corners (rounded-none).
+                </p>
+            </div>
+        ),
+    },
+};
+
+export const RoundedLarge: Story = {
+    render: (args) => <DialogWrapper {...args} />,
+    args: {
+        title: 'Custom Rounded Dialog (rounded: lg)',
+        rounded: 'lg',
+        children: (
+            <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-400">
+                    This dialog has custom rounded corners (rounded-lg).
+                </p>
+            </div>
+        ),
+    },
+};
+

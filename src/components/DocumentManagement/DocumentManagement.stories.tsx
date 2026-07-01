@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DocumentViewer } from './DocumentViewer';
-import { TemplatePreview } from './TemplatePreview';
 import { DocumentManagementShowcase } from './Showcase';
 import { generateDocument } from './generateDocument';
 import type { DocumentTemplate } from './types';
@@ -100,12 +99,6 @@ export const Viewer: StoryObj<typeof DocumentViewer> = {
     <div style={{ height: '700px', width: '100%' }}>
       <DocumentViewer documentData={compiledDoc} />
     </div>
-  ),
-};
-
-export const Preview: StoryObj<typeof TemplatePreview> = {
-  render: () => (
-    <TemplatePreview template={mockStoryTemplate} sampleData={mockStoryData} />
   ),
 };
 

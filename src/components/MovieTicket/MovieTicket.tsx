@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock, Info, CreditCard, Calendar, QrCode } from 'lucide-react';
+import { QrCode, Phone, ChevronDown } from 'lucide-react';
 
 export interface MovieTicketProps {
     movieTitle: string;
@@ -11,7 +11,7 @@ export interface MovieTicketProps {
     time: string; // Show time
     screen: string;
     seats: string;
-    rating?: string; // e.g., UA, 13+
+    rating?: string; // e.g., UA, U, 13+
     duration?: string; // e.g., 2h 35m
     bookingId?: string;
     transactionId?: string;
@@ -20,8 +20,26 @@ export interface MovieTicketProps {
     qrCodeUrl?: string; // Optional URL for QR code image
     isFavorite?: boolean;
     onFavoriteToggle?: () => void;
+    onCancelBooking?: () => void;
+    onContactSupport?: () => void;
     className?: string;
 }
+
+const TicketSlashIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <path d="M2 9a3 3 0 0 1 0-6h20a3 3 0 0 1 0 6 2 2 0 0 0 0 6 3 3 0 0 1 0 6H2a3 3 0 0 1 0-6 2 2 0 0 0 0-6Z" />
+        <line x1="2" y1="22" x2="22" y2="2" />
+    </svg>
+);
 
 export const MovieTicket: React.FC<MovieTicketProps> = ({
     movieTitle,
@@ -33,37 +51,25 @@ export const MovieTicket: React.FC<MovieTicketProps> = ({
     time,
     screen,
     seats,
-    rating = 'UA',
-    duration = '2h 15m',
-    bookingId = 'BK928374',
-    transactionId = 'TXN123456789',
+    rating,
+    bookingId = 'WHL6CTF',
     price = '₹350.00',
-    bookingDate = 'Oct 30, 2026',
     qrCodeUrl,
-    isFavorite = false,
-    onFavoriteToggle,
+    onCancelBooking = () => alert('Cancel booking initiated'),
+    onContactSupport = () => alert('Connecting to support...'),
     className = '',
 }) => {
-    return (
-        <div className={`relative max-w-[420px] bg-[#0a0a0a] rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden font-sans border border-white/5 transition-all duration-500 group text-white ${className}`}>
+    // Determine ticket count based on seats list
+    const ticketCount = seats ? seats.split(',').filter(Boolean).length : 1;
 
-            {/* Film Strip Side Decorators */}
-            <div className="absolute top-0 bottom-0 left-2 w-1 flex flex-col justify-around py-4 opacity-20 transition-opacity">
-                {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-1 h-3 bg-white rounded-sm"></div>
-                ))}
-            </div>
-            <div className="absolute top-0 bottom-0 right-2 w-1 flex flex-col justify-around py-4 opacity-20 transition-opacity">
-                {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-1 h-3 bg-white rounded-sm"></div>
-                ))}
-            </div>
+    return (
+        <div className={`relative w-full max-w-[360px] bg-white border border-gray-200/80 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden font-sans text-gray-800 transition-all duration-300 hover:shadow-[0_12px_40px_rgb(0,0,0,0.1)] ${className}`}>
 
             {/* Top Section - Poster and Main Info */}
-            <div className="relative p-8 pb-6 ml-4 mr-4 bg-gradient-to-b from-white/10 to-transparent">
-                <div className="flex gap-6">
+            <div className="p-6 pb-4 flex gap-4 items-start relative justify-between">
+                <div className="flex gap-4 items-start flex-grow">
                     {/* Poster */}
-                    <div className="w-28 h-40 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-500">
+                    <div className="w-[84px] h-[120px] rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-gray-100 flex-shrink-0">
                         <img
                             src={posterUrl}
                             alt={movieTitle}
@@ -71,116 +77,112 @@ export const MovieTicket: React.FC<MovieTicketProps> = ({
                         />
                     </div>
 
-                    <div className="flex-grow pt-1">
-                        <div className="flex justify-between items-start">
-                            <div className="flex-grow">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="px-2 py-0.5 bg-rose-600 rounded-md text-[9px] font-black tracking-tighter uppercase whitespace-nowrap">
-                                        {format}
-                                    </span>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                        {language}
-                                    </span>
-                                </div>
-                                <h2 className="text-2xl font-black leading-tight tracking-tight line-clamp-2">
-                                    {movieTitle}
-                                </h2>
-                            </div>
-                            <button
-                                onClick={onFavoriteToggle}
-                                className={`p-2.5 rounded-2xl transition-all duration-300 ${isFavorite ? 'text-rose-500 bg-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.3)]' : 'text-white/20 hover:bg-white/5 hover:text-white/40'}`}
-                            >
-                                <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
-                            </button>
-                        </div>
+                    {/* Movie Info */}
+                    <div className="flex-grow min-w-0 pt-0.5">
+                        <h2 className="text-base font-extrabold text-gray-950 leading-tight tracking-tight break-words">
+                            {movieTitle} {rating ? `(${rating})` : ''}
+                        </h2>
 
-                        {/* Rating and Duration */}
-                        <div className="flex items-center gap-4 mt-4 text-[11px] text-gray-400 font-bold uppercase tracking-wider">
-                            <div className="flex items-center gap-1.5">
-                                <Info size={12} className="text-gray-500" />
-                                <span>{rating}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 border-l border-white/10 pl-4">
-                                <Clock size={12} className="text-gray-500" />
-                                <span>{duration}</span>
-                            </div>
-                        </div>
+                        <p className="text-[11px] font-bold text-gray-400 mt-2 tracking-wide uppercase">
+                            {language}, {format}
+                        </p>
+
+                        <p className="text-[11px] font-semibold text-gray-600 mt-1">
+                            {date} | {time}
+                        </p>
+
+                        <p className="text-[11px] text-gray-500 mt-1 leading-snug font-medium line-clamp-2">
+                            {location}
+                        </p>
                     </div>
                 </div>
 
-                {/* Show Details Section */}
-                <div className="mt-8 grid grid-cols-2 gap-x-8 gap-y-6">
-                    <div>
-                        <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em] mb-1">Location</p>
-                        <p className="text-xs font-bold text-gray-200 line-clamp-1">{location}</p>
-                    </div>
-                    <div>
-                        <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em] mb-1">Date & Time</p>
-                        <p className="text-xs font-bold text-gray-200">{date} <span className="text-gray-500 mx-1">@</span> {time}</p>
-                    </div>
-                    <div>
-                        <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em] mb-1">Screen</p>
-                        <p className="text-sm font-black text-white">{screen}</p>
-                    </div>
-                    <div>
-                        <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em] mb-1">Seats</p>
-                        <p className="text-sm font-black text-white uppercase">{seats}</p>
-                    </div>
+                {/* Vertical M-Ticket Badge */}
+                <div className="text-[9px] font-extrabold text-gray-400/80 tracking-[0.25em] [writing-mode:vertical-lr] text-center self-center pl-3 border-l border-dashed border-gray-150 h-16 flex items-center justify-center select-none shrink-0">
+                    e-Ticket
                 </div>
             </div>
 
-            {/* Perforation Line (Enhanced Dark Mode) */}
-            <div className="relative flex items-center justify-between ml-4 mr-4">
-                <div className="w-10 h-10 bg-[#0a0a0a] rounded-full -ml-[36px] border border-white/5 shadow-[inset_-8px_0_12px_rgba(0,0,0,0.5)] z-10"></div>
-                <div className="flex-grow h-[1px] border-t-2 border-dashed border-white/10 mx-2"></div>
-                <div className="w-10 h-10 bg-[#0a0a0a] rounded-full -mr-[36px] border border-white/5 shadow-[inset_8px_0_12px_rgba(0,0,0,0.5)] z-10"></div>
+            {/* Perforation Line with Side Notches */}
+            <div className="relative flex items-center justify-between my-1">
+                {/* Left Notch */}
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-[#f3f4f6] rounded-r-full border-y border-r border-gray-200/80 -ml-[1px] z-20"></div>
+                {/* Dashed Separator */}
+                <div className="w-full border-t border-dashed border-gray-200/80 mx-5"></div>
+                {/* Right Notch */}
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-[#f3f4f6] rounded-l-full border-y border-l border-gray-200/80 -mr-[1px] z-20"></div>
             </div>
 
-            {/* Bottom Section - Coding/Scanning/Payment */}
-            <div className="p-8 pt-6 ml-4 mr-4 bg-gradient-to-t from-white/5 to-transparent flex gap-6">
-                {/* QR Code Placeholder */}
-                <div className="w-24 h-24 bg-white/[0.03] rounded-2xl flex items-center justify-center border border-white/10 transition-all relative overflow-hidden p-2">
-                    {qrCodeUrl ? (
-                        <img src={qrCodeUrl} alt="QR Code" className="w-full h-full object-contain invert" />
-                    ) : (
-                        <QrCode size={48} className="text-white/10 transition-all" strokeWidth={1} />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-                </div>
-
-                {/* Booking Info */}
-                <div className="flex-grow space-y-4 pt-1">
-                    <div className="flex justify-between">
-                        <div>
-                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Booking ID</p>
-                            <p className="text-[11px] font-mono font-bold text-gray-300">{bookingId}</p>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Total Paid</p>
-                            <p className="text-sm font-black text-green-400">{price}</p>
-                        </div>
+            {/* Bottom Section - QR, Details & Actions */}
+            <div className="pt-2 pb-0">
+                {/* Details Container */}
+                <div className="mx-6 p-4 bg-gray-50/80 border border-gray-100 rounded-2xl flex gap-4 items-center">
+                    {/* QR Code */}
+                    <div className="w-20 h-20 bg-white border border-gray-200/60 rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">
+                        {qrCodeUrl ? (
+                            <img src={qrCodeUrl} alt="QR Code" className="w-full h-full object-contain" />
+                        ) : (
+                            <QrCode size={40} className="text-gray-300" strokeWidth={1.5} />
+                        )}
                     </div>
 
-                    <div className="pt-3 border-t border-white/5 grid grid-cols-2 gap-4">
-                        <div className="flex items-center gap-2">
-                            <CreditCard size={10} className="text-gray-500" />
-                            <p className="text-[9px] font-bold text-gray-500 line-clamp-1">{transactionId}</p>
-                        </div>
-                        <div className="flex items-center gap-2 justify-end">
-                            <Calendar size={10} className="text-gray-500" />
-                            <p className="text-[9px] font-bold text-gray-500 uppercase">{bookingDate}</p>
-                        </div>
+                    {/* Booking Details */}
+                    <div className="flex-grow flex flex-col items-center justify-center text-center pr-2">
+                        <span className="text-[10px] text-gray-400 font-extrabold tracking-wider uppercase">
+                            {ticketCount} Ticket(s)
+                        </span>
+                        <span className="text-base font-extrabold text-gray-900 mt-0.5 tracking-tight uppercase">
+                            {screen}
+                        </span>
+                        <span className="text-xs font-bold text-gray-500 uppercase mt-0.5 tracking-wide">
+                            {seats}
+                        </span>
+                        <span className="text-xs font-extrabold text-gray-900 mt-2 tracking-wide">
+                            BOOKING ID: {bookingId}
+                        </span>
+                        <span className="text-[9px] text-gray-400 font-semibold mt-1 hover:text-gray-600 cursor-pointer select-none transition-colors">
+                            Tap to see more
+                        </span>
                     </div>
+                </div>
+
+                {/* Caption Text */}
+                <p className="text-[10px] text-gray-400 font-medium text-center px-6 mt-3 leading-normal max-w-[320px] mx-auto">
+                    A confirmation is sent on e-mail/SMS/WhatsApp within 15 minutes of booking.
+                </p>
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-around mt-4 pt-3 pb-3 border-t border-gray-100 mx-6">
+                    <button
+                        onClick={onCancelBooking}
+                        className="flex-1 flex flex-col items-center gap-1.5 py-1 text-gray-500 hover:text-red-500 active:scale-95 transition-all outline-none"
+                    >
+                        <TicketSlashIcon className="w-5 h-5 text-gray-400 hover:text-red-400 transition-colors" />
+                        <span className="text-[10px] font-bold text-gray-500 tracking-wide">Cancel booking</span>
+                    </button>
+
+                    <div className="h-6 w-px bg-gray-150"></div>
+
+                    <button
+                        onClick={onContactSupport}
+                        className="flex-1 flex flex-col items-center gap-1.5 py-1 text-gray-500 hover:text-blue-500 active:scale-95 transition-all outline-none"
+                    >
+                        <Phone size={20} className="text-gray-400 hover:text-blue-400 transition-colors" />
+                        <span className="text-[10px] font-bold text-gray-500 tracking-wide">Contact support</span>
+                    </button>
                 </div>
             </div>
 
-            {/* Vertical M-TICKET Badge */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[8px] font-black text-white/5 tracking-[0.8em] px-1 uppercase select-none transition-colors">
-                ELECTRONIC • ADMIT ONE • M-TICKET
+            {/* Total Amount Footer Ribbon */}
+            <div className="bg-gray-50 px-6 py-4 flex justify-between items-center border-t border-gray-100 rounded-b-[2rem]">
+                <span className="text-xs text-gray-500 font-bold tracking-wider uppercase">Total Amount</span>
+                <div className="flex items-center gap-1 cursor-pointer select-none group">
+                    <span className="text-sm font-extrabold text-gray-900 group-hover:text-gray-700 transition-colors">{price}</span>
+                    <ChevronDown size={16} className="text-gray-500 group-hover:text-gray-700 transition-colors" />
+                </div>
             </div>
 
-            {/* Gloss Overlay */}
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent opacity-30 transition-opacity duration-700"></div>
         </div>
     );
 };
+

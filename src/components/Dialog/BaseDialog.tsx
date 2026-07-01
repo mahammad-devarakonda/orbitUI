@@ -13,6 +13,7 @@ export interface BaseDialogProps {
     className?: string;
     showCloseButton?: boolean;
     theme?: 'light' | 'dark' | 'system';
+    rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
 export const BaseDialog: React.FC<BaseDialogProps> = ({
@@ -26,6 +27,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
     className = '',
     showCloseButton = true,
     theme,
+    rounded = '2xl',
 }) => {
     const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -60,9 +62,18 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
 
     const sizeClasses = {
         sm: 'max-w-sm',
-        md: 'max-w-md',
-        lg: 'max-w-lg',
-        xl: 'max-w-2xl',
+        md: 'w-[90vw] md:w-[50vw] max-w-[90vw] md:max-w-[50vw]',
+        lg: 'w-[95vw] md:w-[75vw] max-w-[95vw] md:max-w-[75vw]',
+        xl: 'w-[98vw] md:w-[95vw] max-w-[98vw] md:max-w-[95vw]',
+    };
+
+    const roundedClasses: Record<NonNullable<BaseDialogProps['rounded']>, string> = {
+        none: 'rounded-none',
+        sm: 'rounded-sm',
+        md: 'rounded-md',
+        lg: 'rounded-lg',
+        xl: 'rounded-xl',
+        '2xl': 'rounded-2xl',
     };
 
     // Determine if we should apply the dark class locally
@@ -79,7 +90,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
                     w-full 
                     bg-white 
                     dark:bg-gray-950
-                    rounded-2xl 
+                    ${roundedClasses[rounded]} 
                     shadow-2xl 
                     border
                     border-transparent

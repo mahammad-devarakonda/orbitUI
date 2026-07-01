@@ -1587,8 +1587,8 @@ function App() {
           <div className="h-full w-full p-6 flex flex-col">
             <div className="mb-4 shrink-0 flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Document Template & Viewer Management</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Manage templates, dynamically bind mock data schemas, and view compiled high-fidelity files.</p>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Document Viewer</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">View compiled high-fidelity files inside a premium Adobe-style PDF canvas.</p>
               </div>
               <button 
                 onClick={() => setActiveTab('showcase')}
